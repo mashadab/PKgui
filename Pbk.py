@@ -61,7 +61,7 @@ print("4.) C: \t \t", res.x[2] )
 print("======================")
 print("Free surface profiles")
 print("======================")
-print("Psi \t \t \t \t x \t \t \t \t \t z")
+print("Psi \t \t x \t \t z")
 '''
 x_array = np.linspace(0,L,n)
 for x in x_array:
@@ -79,11 +79,13 @@ z_array = []
 xz_array = []
 for i in range(0,n):
     x  = x_func(L,res.x[0], res.x[1],res.x[2],Psi_array[i])
-    z  = z_func(H,res.x[0], res.x[1],res.x[2],Psi_array[i])    
+    z  = z_func(H,res.x[0], res.x[1],res.x[2],Psi_array[i]) 
+    if x==0: z = 1
+    if x==L: z = H + H0_func(res.x[0],res.x[1],res.x[2]) 
     xz_array.append([x,z])
     x_array.append(x)
-    if i%(int(n/10)) == 0:    
-        print(Psi_array[i],'\t','\t','\t','\t',x,'\t','\t','\t','\t', z)
+    if i%(int(n/20)) == 0 and x != np.inf and x!=-np.inf:    
+        print(Psi_array[i],'\t',x,'\t','\t','\t','\t', z)
 x_array  = np.array(x_array)
 xz_array = np.array(xz_array)
 xz_array[x_array<0,:] = np.nan
@@ -98,9 +100,12 @@ plt.vlines(L,0,H+H0_func(res.x[0],res.x[1],res.x[2]),colors='blue')
 plt.vlines(L,0,H,colors='blue') 
 plt.hlines(H,L,1.1*L,colors='blue')   
 plt.hlines(0,0,1.1*L,colors='blue')   
-
+plt.xlabel('x')
+plt.ylabel('z')
 H0 = H0_func(res.x[0],res.x[1],res.x[2]) 
 
+
+plt.savefig(f"H{H}_L{L}_H0_{H0}.pdf")
 np.savetxt(f"H{H}_L{L}_H0_{H0}.csv", xz_array, delimiter=",")
 
 
