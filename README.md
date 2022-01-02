@@ -63,6 +63,14 @@ git clone https://github.com/mashadab/Polubarinova-Kochina-solutions
 3. Run the python program in Spyder environment
 
 
+## Output (Windows and Mac)
+The output files include:
+
+1. details.csv: Information regading the input and output variables
+2. free-surface-profiles_XandZ.csv: Free surface profile (X vs Z)
+3. free-surface-profile.pdf: High-res image of the output figure
+4. free-surface-profile.png: Low-res image of the output figure
+
 ## Authors
 - Mohammad Afzal Shadab
 - Eric Hiatt
