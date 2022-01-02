@@ -11,26 +11,28 @@ sg.theme('Dark Green 7')
 
 
 #window layout of two columns
-file_list_column = [ [sg.Txt('Length of the aquifer, L')],
-           [sg.In(size=(8,4), key='-L-')],
-           [sg.Txt('Lake level, H')],
-           [sg.In(size=(8,4), key='-H-')],
-           [sg.Txt('Seepage face height, H0 :')],
-           [sg.Txt(size=(20,4), key='-OUTPUT-')  ],
-           [sg.Txt('Alpha :')],
-           [sg.Txt(size=(20,4), key='-OUTPUT1-')  ],
-           [sg.Txt('Beta :')],
-           [sg.Txt(size=(20,4), key='-OUTPUT2-')  ],
-           [sg.Txt('C :')],
-           [sg.Txt(size=(20,4), key='-OUTPUT3-')  ],
-           [sg.Button('Calculate', bind_return_key=True)]]
+file_list_column = [ [sg.Txt('===========Input variables ============',font = ("Serif", 13))],
+           [sg.Txt('Length of the aquifer, L',font = ("Serif", 13))],
+           [sg.In(size=(8,4), key='-L-',font = ("Serif", 13))],
+           [sg.Txt('Lake level, H',font = ("Serif", 13))],
+           [sg.In(size=(8,4), key='-H-',font = ("Serif", 13))],
+           [sg.Txt('===========Output variables ===========',font = ("Serif", 13))],
+           [sg.Txt('Seepage face height, H0 :',font = ("Serif", 13))],
+           [sg.Txt(size=(30,4), key='-OUTPUT-')  ],
+           [sg.Txt('Alpha :',font = ("Serif", 13))],
+           [sg.Txt(size=(30,4), key='-OUTPUT1-')  ],
+           [sg.Txt('Beta :',font = ("Serif", 13))],
+           [sg.Txt(size=(30,4), key='-OUTPUT2-')  ],
+           [sg.Txt('C :',font = ("Serif", 13))],
+           [sg.Txt(size=(30,4), key='-OUTPUT3-')  ],
+           [sg.Button('Calculate', bind_return_key=True,font = ("Serif", 13))]]
 
 #for now will only show the name of the chosen file
 image_viewer_column = [
     
-    [sg.Text("Output figure will appear here.")],    
-    [sg.Text(size=(40,1), key="-TOUT-")],
-    [sg.Image(key="-IMAGE-")],
+    [sg.Text("Output will be stored as .csv and .pdf in the same folder as exe file.",font = ("Serif", 13))],    
+    [sg.Text(size=(50,1), key="-TOUT-")],
+    [sg.Image(size=(600,600),key="-IMAGE-")],
 ]
 
 layout = [
@@ -61,9 +63,13 @@ while True:
             calc2 = 'Invalid Beta'
             calc3 = 'Invalid C'
 
-        window['-OUTPUT-'].update(calc)
-        window['-OUTPUT1-'].update(calc1)
-        window['-OUTPUT2-'].update(calc2)
-        window['-OUTPUT3-'].update(calc3)
+        window['-OUTPUT-'].update(calc,font = ("Serif", 13))
+        window['-OUTPUT1-'].update(calc1,font = ("Serif", 13))
+        window['-OUTPUT2-'].update(calc2,font = ("Serif", 13))
+        window['-OUTPUT3-'].update(calc3,font = ("Serif", 13))
+        
+        filename = f"H{H}_L{L}_H0_{calc}.png"
+        window["-TOUT-"].update(filename,font = ("Serif", 13))
+        window["-IMAGE-"].update(filename=filename)
     else:
         break

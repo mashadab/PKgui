@@ -82,7 +82,7 @@ def PbK_solution(H,L):
     xz_array[x_array<0,:] = nan
     xz_array[x_array>L,:] = nan
     
-    fig = figure(figsize=(8,8) , dpi=100)
+    fig = figure(figsize=(6,6) , dpi=100)
     ax = fig.add_subplot(111)
     ax.plot(xz_array[:,0],xz_array[:,1],'b-')
     ax.vlines(0,0,1,colors='blue') 
