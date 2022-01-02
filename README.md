@@ -1,5 +1,5 @@
 # Polubarinova-Kochina-solutions
-# (Standalone GUI executables for Windows and Mac)
+## (Standalone GUI executables for Windows and Mac)
 Oden Institute for Computational Engineering and Sciences / Jackson School of Geosciences / University of Texas Institute for Geophysics
 The University of Texas at Austin
 
