@@ -15,7 +15,7 @@ This codes solves the Polubarina-Kochina equations for low aspect ratio dam prob
 ### GUI Standalone executables (available [here](https://drive.google.com/drive/u/0/folders/184aby8uWy1ZTMGidqhQwq9rfznjocVY1))
 These files may require permissions to write:
 - Mac: Change permissions using chmod 777 Pbk_Windows
-- Windows: Run as Administrator
+- Windows: 
 
 ### Variables [Dimension] (refer to paper [1])
 
@@ -33,7 +33,11 @@ Alpha: Pbk parameter [-],   Beta:  Pbk parameter [-],   z: Free surface height [
 
 1. Download the executables from [Google drive](https://drive.google.com/drive/u/0/folders/184aby8uWy1ZTMGidqhQwq9rfznjocVY1).
 
-2. Run the program (takes a few seconds to boot).
+2. Run the program (takes a few seconds to boot). 
+    a. Mac: - If it does not recognize the file, then run the file in terminal as ``` ./Pbk_Mac```
+            - Change permissions using chmod 777 Pbk_Windows
+            - Choose Apple menu > System Preferences, click Security & Privacy, then click General. You can grant an exception for a blocked app by clicking the “Open Anyway” button in the General pane.
+    b. Windows: Run as Administrator
 
 ### Python with GUI (Windows and Mac)
 Dependences for Python program
