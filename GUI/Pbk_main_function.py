@@ -6,9 +6,9 @@ Pbk main functionsolution
 
 from scipy.integrate import quad
 from scipy.special import ellipk
-from numpy import sin, cos, sqrt, array, pi, nan, inf, savetxt, linspace, isnan
+from numpy import sin, cos, sqrt, array, pi, nan, inf, savetxt, linspace, isnan, concatenate, shape
 from scipy.optimize import fsolve,least_squares
-from matplotlib.pyplot import figure, xlabel, ylabel, plot, vlines, hlines, savefig, show
+from matplotlib.pyplot import figure, xlabel, ylabel, plot, vlines, hlines, savefig, show, tight_layout
 from warnings import filterwarnings
 from matplotlib.pyplot import rcParams
 
@@ -38,9 +38,8 @@ def x_res_func(L,alpha, beta,C,Psi,x):
     return x - L + C*quad(lambda phi: (ellipk(sin(phi)**2)*sin(phi))/sqrt((1 - alpha* sin(phi)**2)*(1 - beta* sin(phi)**2)), 0, Psi)[0]#- x_func(L,alpha, beta,C,Psi)
 
 
-def PbK_solution(H,L):
-    n = 101    #number of points for free surface profile
-
+def PbK_solution(H,L,n,output_folder):
+    
     def full_equations(p):
         alpha, beta, C = p
         return (L_res_func(L,alpha, beta,C), H_res_func(H,alpha, beta,C),H1_res_func(H,alpha, beta,C))
@@ -92,13 +91,18 @@ def PbK_solution(H,L):
     ax.hlines(0,0,1.1*L,colors='blue')   
     ax.set_xlabel('x')
     ax.set_ylabel('z')
-    fig.show()
+    tight_layout(pad=1, w_pad=0.8, h_pad=1)
+    #fig.show()
     
     H0 = H0_func(res.x[0],res.x[1],res.x[2]) 
-    fig.savefig(f"H{H}_L{L}_H0_{H0}.pdf")
-    fig.savefig(f"H{H}_L{L}_H0_{H0}.png")
+    fig.savefig(f"{output_folder}/H{H}_L{L}_H0_{H0}.pdf")
+    fig.savefig(f"{output_folder}/H{H}_L{L}_H0_{H0}.png")
     
-    savetxt(f"H{H}_L{L}_H0_{H0}.csv", xz_array, delimiter=",")
+    names = ['Lake level H','Aquifer length L', 'Seepage face height H0', 'alpha', 'beta', 'C' ]
+    scores = [H, L, H0, res.x[0],res.x[1],res.x[2] ]
+    
+    savetxt(f"{output_folder}/H{H}_L{L}_H0_{H0}_details.csv", [p for p in zip(names, scores)], delimiter=',', fmt='%s')
+    savetxt(f"{output_folder}/H{H}_L{L}_H0_{H0}_free-surface-profiles_XandZ.csv", xz_array, delimiter=",")
     
     return H0, res.x, xz_array
 
