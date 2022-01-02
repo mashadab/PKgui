@@ -17,7 +17,7 @@ file_list_column = [  [sg.Txt('Polubarinova-Kochina Solution',font = ("Serif", 2
            [sg.Txt('            - This method only works for low-aspect ratio dams.',font = ("Serif", 13))],
            [sg.Txt('______________________________________________',font = ("Serif", 18))],
            [sg.Txt('Input variables ',font = ("Serif", 18,'bold','italic'))],
-           [sg.Txt('Units [e.g. m]',font = ("Serif", 13))],
+           [sg.Txt('Unit [e.g. m]',font = ("Serif", 13))],
            [sg.In(size=(4,1), key='-U-',font = ("Serif", 13))],
            [sg.Txt('Dam length, L  [e.g. 100]',font = ("Serif", 13))],
            [sg.In(size=(8,1), key='-L-',font = ("Serif", 13))],
@@ -25,9 +25,9 @@ file_list_column = [  [sg.Txt('Polubarinova-Kochina Solution',font = ("Serif", 2
            [sg.In(size=(8,1), key='-H-',font = ("Serif", 13))],
            [sg.Txt('Upper lake height, H1  [e.g. 110]',font = ("Serif", 13))],
            [sg.In(size=(8,1), key='-H1-',font = ("Serif", 13))],
-           [sg.Txt('Rough number of points at free-surface, N  [e.g. 1001]',font = ("Serif", 13))],
+           [sg.Txt('Rough number of points at free-surface, N  [e.g. 1000]',font = ("Serif", 13))],
            [sg.In(size=(8,1), key='-N-',font = ("Serif", 13))],
-           [sg.Text("Output Folder",font = ("Serif", 13))],
+           [sg.Text("Output Folder  [e.g. /Users/admin/Desktop]",font = ("Serif", 13))],
            [
             sg.In(size=(30,1), key="-FOLDER-",font = ("Serif", 13)),
             sg.FolderBrowse(font = ("Serif", 13)),
@@ -74,7 +74,6 @@ while True:
             H1 = float(values['-H1-'])
             L = float(values['-L-'])
             N = int(values['-N-'])
-            N = N+1 #to keep node values
             unit = str(values['-U-'])
             output_folder = str(values['-FOLDER-'])            
             H0, res, xz_array = PbK_solution(H,L,H1,N,output_folder,unit)

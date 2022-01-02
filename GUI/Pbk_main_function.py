@@ -6,7 +6,7 @@ Pbk main functionsolution
 
 from scipy.integrate import quad
 from scipy.special import ellipk
-from numpy import sin, cos, sqrt, array, pi, nan, inf, savetxt, linspace, isnan, concatenate, shape
+from numpy import sin, cos, sqrt, array, pi, nan, inf, savetxt, linspace, isnan, concatenate, shape, any
 from scipy.optimize import fsolve,least_squares
 from matplotlib.pyplot import figure, xlabel, ylabel, plot, vlines, hlines, savefig, show, tight_layout
 from warnings import filterwarnings
@@ -67,7 +67,7 @@ def PbK_solution(H_full,L_full,H1,n,output_folder,unit):
     print("Free surface profiles")
     print("======================")
     print("Psi \t \t x \t \t z")
-    Psi_array = linspace(0,10,n)
+    Psi_array = linspace(0,10,n+1)
     x_array = []
     z_array = []
     xz_array = []
@@ -119,11 +119,10 @@ def PbK_solution(H_full,L_full,H1,n,output_folder,unit):
     H0 = H0_func(res.x[0],res.x[1],res.x[2]) 
     fig.savefig(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/free-surface-profile.png")
     
-    names = ['Dam length L', 'Lower lake level H', 'Upper lake level H1', 'Seepage face height H0', 'alpha', 'beta', 'C' ]
-    scores = [L_full, H_full, H1,  H0, res.x[0],res.x[1],res.x[2] ]
+    names = ['Unit','Dam length L', 'Lower lake level H', 'Upper lake level H1', 'Seepage face height H0', 'alpha', 'beta', 'C' ]
+    scores = [unit, L_full, H_full, H1,  H0, res.x[0],res.x[1],res.x[2] ]
     
-    #names = ['Units','Dam length L', 'Lower lake level H', 'Upper lake level H1', 'Seepage face height H0', 'alpha', 'beta', 'C' ]
-    #scores = [unit,L_full, H_full, H1,  H0, res.x[0],res.x[1],res.x[2] ]
+    xz_array[~isnan(xz_array).any(axis=1)]
     
     savetxt(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/details.csv", [p for p in zip(names, scores)], delimiter=',', fmt='%s')
     savetxt(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/free-surface-profiles_XandZ.csv", xz_array, delimiter=",")
