@@ -1,4 +1,4 @@
-# Polubarina-Kochina-solutions
+# Polubarinova-Kochina-solutions
 Oden Institute for Computational Engineering and Sciences / Jackson School of Geosciences / University of Texas Institute for Geophysics
 The University of Texas at Austin
 
@@ -11,10 +11,10 @@ This codes solves the Polubarina-Kochina equations for low aspect ratio dam prob
 
 ![cover](/cover/cover.png?raw=true)
 
-### GUI Standalone executables (.exe)
+### GUI Standalone executables (available [here](https://drive.google.com/drive/u/0/folders/184aby8uWy1ZTMGidqhQwq9rfznjocVY1))
 These files may require permissions to write:
-- [Mac](https://drive.google.com/drive/u/0/folders/184aby8uWy1ZTMGidqhQwq9rfznjocVY1) Change permissions using chmod 777 Pbk_Windows
-- [Windows](https://drive.google.com/drive/u/0/folders/184aby8uWy1ZTMGidqhQwq9rfznjocVY1) Run as Administrator
+- Mac: Change permissions using chmod 777 Pbk_Windows
+- Windows: Run as Administrator
 
 ### Dependences
 
