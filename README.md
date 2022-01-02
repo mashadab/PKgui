@@ -12,11 +12,6 @@ This codes solves the Polubarina-Kochina equations for low aspect ratio dam prob
 
 ![cover](/cover/cover.png?raw=true)
 
-### GUI Standalone executables (available [here](https://drive.google.com/drive/u/0/folders/184aby8uWy1ZTMGidqhQwq9rfznjocVY1))
-These files may require permissions to write:
-- Mac: Change permissions using chmod 777 Pbk_Windows
-- Windows: 
-
 ### Variables [Dimension] (refer to paper [1])
 
 L: Length of dam [L],   H: Lower lake height [L],   H1: Upper lake height [L],   H0: Seepage face height [L],   C: Pbk parameter [-], \
