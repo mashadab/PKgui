@@ -11,6 +11,7 @@ from scipy.optimize import fsolve,least_squares
 from matplotlib.pyplot import figure, xlabel, ylabel, plot, vlines, hlines, savefig, show, tight_layout
 from warnings import filterwarnings
 from matplotlib.pyplot import rcParams
+from os import mkdir
 
 rcParams.update({'font.size': 22})
 rcParams.update({'font.family': 'Serif'})
@@ -38,7 +39,10 @@ def x_res_func(L,alpha, beta,C,Psi,x):
     return x - L + C*quad(lambda phi: (ellipk(sin(phi)**2)*sin(phi))/sqrt((1 - alpha* sin(phi)**2)*(1 - beta* sin(phi)**2)), 0, Psi)[0]#- x_func(L,alpha, beta,C,Psi)
 
 
-def PbK_solution(H,L,n,output_folder):
+def PbK_solution(H_full,L_full,H1,n,output_folder,unit):
+    
+    H = H_full/H1
+    L = L_full/H1
     
     def full_equations(p):
         alpha, beta, C = p
@@ -83,26 +87,46 @@ def PbK_solution(H,L,n,output_folder):
     
     fig = figure(figsize=(6,6) , dpi=100)
     ax = fig.add_subplot(111)
-    ax.plot(xz_array[:,0],xz_array[:,1],'b-')
-    ax.vlines(0,0,1,colors='blue') 
-    ax.vlines(L,0,H+H0_func(res.x[0],res.x[1],res.x[2]),colors='blue')  
-    ax.vlines(L,0,H,colors='blue') 
-    ax.hlines(H,L,1.1*L,colors='blue')   
-    ax.hlines(0,0,1.1*L,colors='blue')   
-    ax.set_xlabel('x')
-    ax.set_ylabel('z')
+    ax.plot(H1*xz_array[:,0],H1*xz_array[:,1],'b-')
+    ax.vlines(0,0,H1,colors='blue') 
+    ax.vlines(H1*L,0,H1*H+H1*H0_func(res.x[0],res.x[1],res.x[2]),colors='blue')  
+    ax.vlines(H1*L,0,H1*H,colors='blue') 
+    ax.hlines(H1*H,H1*L,H1*1.1*L,colors='blue')   
+    ax.hlines(0,0,H1*1.1*L,colors='blue')   
+    ax.set_xlabel(f'x [{unit}]')
+    ax.set_ylabel(f'z [{unit}]')
     tight_layout(pad=1, w_pad=0.8, h_pad=1)
     #fig.show()
     
     H0 = H0_func(res.x[0],res.x[1],res.x[2]) 
-    fig.savefig(f"{output_folder}/H{H}_L{L}_H0_{H0}.pdf")
-    fig.savefig(f"{output_folder}/H{H}_L{L}_H0_{H0}.png")
     
-    names = ['Lake level H','Aquifer length L', 'Seepage face height H0', 'alpha', 'beta', 'C' ]
-    scores = [H, L, H0, res.x[0],res.x[1],res.x[2] ]
+    mkdir(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}")
+    fig.savefig(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/free-surface-profile.pdf")
     
-    savetxt(f"{output_folder}/H{H}_L{L}_H0_{H0}_details.csv", [p for p in zip(names, scores)], delimiter=',', fmt='%s')
-    savetxt(f"{output_folder}/H{H}_L{L}_H0_{H0}_free-surface-profiles_XandZ.csv", xz_array, delimiter=",")
+    fig = figure(figsize=(10,10), dpi=50)
+    ax = fig.add_subplot(111)
+    ax.plot(H1*xz_array[:,0],H1*xz_array[:,1],'b-')
+    ax.vlines(0,0,H1,colors='blue') 
+    ax.vlines(H1*L,0,H1*H+H1*H0_func(res.x[0],res.x[1],res.x[2]),colors='blue')  
+    ax.vlines(H1*L,0,H1*H,colors='blue') 
+    ax.hlines(H1*H,H1*L,H1*1.1*L,colors='blue')   
+    ax.hlines(0,0,H1*1.1*L,colors='blue')   
+    ax.set_xlabel(f'x [{unit}]')
+    ax.set_ylabel(f'z [{unit}]')
+    tight_layout(pad=1, w_pad=0.8, h_pad=1)
+    #fig.show()
+    
+    H0 = H0_func(res.x[0],res.x[1],res.x[2]) 
+    fig.savefig(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/free-surface-profile.png")
+    
+    names = ['Dam length L', 'Lower lake level H', 'Upper lake level H1', 'Seepage face height H0', 'alpha', 'beta', 'C' ]
+    scores = [L_full, H_full, H1,  H0, res.x[0],res.x[1],res.x[2] ]
+    
+    #names = ['Units','Dam length L', 'Lower lake level H', 'Upper lake level H1', 'Seepage face height H0', 'alpha', 'beta', 'C' ]
+    #scores = [unit,L_full, H_full, H1,  H0, res.x[0],res.x[1],res.x[2] ]
+    
+    savetxt(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/details.csv", [p for p in zip(names, scores)], delimiter=',', fmt='%s')
+    savetxt(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/free-surface-profiles_XandZ.csv", xz_array, delimiter=",")
     
     return H0, res.x, xz_array
 
