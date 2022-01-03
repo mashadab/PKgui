@@ -60,7 +60,7 @@ pip install PySimpleGUI
 git clone https://github.com/mashadab/Polubarinova-Kochina-solutions
 ```
 
-3. Run the python program in Spyder environment
+3. Run the python program "Pbk_GUI.py" in Spyder environment
 
 
 ## Output (Windows and Mac)
