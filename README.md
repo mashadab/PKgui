@@ -15,10 +15,10 @@ This codes solves the Polubarina-Kochina equations for low aspect ratio dam prob
 ### Variables [Dimension] (refer to paper [1])
 
 L: Length of dam [L],   H: Lower lake height [L],   H1: Upper lake height [L],   H0: Seepage face height [L],   C: Pbk parameter [-], \
-Alpha: Pbk parameter [-],   Beta:  Pbk parameter [-],   z: Free surface height [L],   x: horizontal dimension [L] \
+Alpha: Pbk parameter [-],   Beta:  Pbk parameter [-],   z: Free surface height [L],   x: horizontal dimension [L]
 
 ### Relevant file paths
-- [Standalone executable GUI](https://drive.google.com/drive/u/0/folders/184aby8uWy1ZTMGidqhQwq9rfznjocVY1).
+- [Standalone executable GUI](https://drive.google.com/drive/u/0/folders/184aby8uWy1ZTMGidqhQwq9rfznjocVY1)
 - [Python with GUI](https://github.com/mashadab/Polubarinova-Kochina-solutions/blob/main/Pbk_GUI.py)
 
 ## Quick Usage
