@@ -73,8 +73,8 @@ The output files include:
 
 ## Authors
 - Mohammad Afzal Shadab ([mashadab@utexas.edu](mailto:mashadab@utexas.edu))
-- Eric Hiatt
-- Marc Andre Hesse
+- Eric Hiatt ([eric.hiatt@utexas.edu ](mailto:eric.hiatt@utexas.edu ))
+- Marc Andre Hesse ([mhesse@jsg.utexas.edu](mailto:mhesse@jsg.utexas.edu))
 
 <!--- Cite the code: [![DOI](https://zenodo.org/badge/373661080.svg)](https://zenodo.org/badge/latestdoi/373661080) -->
 
