@@ -15,24 +15,22 @@ This codes solves the Polubarina-Kochina equations for low aspect ratio dam prob
 ### Variables [Dimension] (refer to paper [1])
 
 L: Length of dam [L],   H: Lower lake height [L],   H1: Upper lake height [L],   H0: Seepage face height [L],   C: Pbk parameter [-], \
-Alpha: Pbk parameter [-],   Beta:  Pbk parameter [-],   z: Free surface height [L],   x: horizontal dimension [L] \
+Alpha: Pbk parameter [-],   Beta:  Pbk parameter [-],   z: Free surface height [L],   x: horizontal dimension [L]
 
-### Relevant files paths
-
-- [Standalone executable GUI](https://drive.google.com/drive/u/0/folders/184aby8uWy1ZTMGidqhQwq9rfznjocVY1).
-- [Python with GUI](https://github.com/mashadab/Polubarinova-Kochina-solutions/blob/main/GUI/Pbk_GUI.py): Requires PySimpleGUI 
-- [Python without GUI](https://github.com/mashadab/Polubarinova-Kochina-solutions/blob/main/Pbk.py): Requires H/H1 and L/H1 on the fly. 
+### Relevant file paths
+- [Standalone executable GUI](https://drive.google.com/drive/u/0/folders/184aby8uWy1ZTMGidqhQwq9rfznjocVY1)
+- [Python with GUI](https://github.com/mashadab/Polubarinova-Kochina-solutions/blob/main/Pbk_GUI.py)
 
 ## Quick Usage
-### GUI (Windows and Mac)
+### Executable GUI (Windows and Mac)
 
 1. Download the executables from [Google drive](https://drive.google.com/drive/u/0/folders/184aby8uWy1ZTMGidqhQwq9rfznjocVY1).
 
-2. Run the program (takes a few seconds to boot).:
+2. Run the exe file (takes a few seconds to boot).:
 
-    a. Mac: - If it does not recognize the file, then run the file in terminal for the first time as ``` ./Pbk_Mac```
+    a. Mac: - If it does not recognize the file, then:
             - Change permissions of the file using ```chmod 777 Pbk_Mac```
-            - Choose Apple menu > System Preferences, click Security & Privacy, then click General. You can grant an exception for a blocked app by clicking the “Open Anyway” button in the General pane.
+            - Choose Apple menu > System Preferences, click Security & Privacy, then click General. You can grant an exception for a blocked app by clicking the “Open Anyway” button in the General pane (takes about 2-10 minutes to appear).
             
     b. Windows: Run as Administrator
 
@@ -62,7 +60,7 @@ pip install PySimpleGUI
 git clone https://github.com/mashadab/Polubarinova-Kochina-solutions
 ```
 
-3. Run the python program in Spyder environment
+3. Run the python program "Pbk_GUI.py" in Spyder environment
 
 
 ## Output (Windows and Mac)
@@ -74,9 +72,9 @@ The output files include:
 4. free-surface-profile.png: Low-res image of the output figure
 
 ## Authors
-- Mohammad Afzal Shadab
-- Eric Hiatt
-- Marc Andre Hesse
+- Mohammad Afzal Shadab ([mashadab@utexas.edu](mailto:mashadab@utexas.edu))
+- Eric Hiatt ([eric.hiatt@utexas.edu](mailto:eric.hiatt@utexas.edu))
+- Marc Andre Hesse ([mhesse@jsg.utexas.edu](mailto:mhesse@jsg.utexas.edu))
 
 <!--- Cite the code: [![DOI](https://zenodo.org/badge/373661080.svg)](https://zenodo.org/badge/latestdoi/373661080) -->
 
