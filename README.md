@@ -22,7 +22,7 @@ Alpha: Pbk parameter [-],   Beta:  Pbk parameter [-],   z: Free surface height [
 - [Python with GUI](https://github.com/mashadab/Polubarinova-Kochina-solutions/blob/main/Pbk_GUI.py)
 
 ## Quick Usage
-### GUI (Windows and Mac)
+### Executable GUI (Windows and Mac)
 
 1. Download the executables from [Google drive](https://drive.google.com/drive/u/0/folders/184aby8uWy1ZTMGidqhQwq9rfznjocVY1).
 
