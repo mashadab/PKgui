@@ -34,7 +34,7 @@ Alpha: Pbk parameter [-],   Beta:  Pbk parameter [-],   z: Free surface height [
             
     b. Windows: Run as Administrator
 
-### Python with GUI (Windows and Mac)
+### Python with GUI (Windows, Mac and Linux)
 Dependences for Python program
 - [Python](https://www.python.org/) version 3.5+
 - [Numpy](http://www.numpy.org/) >= 1.16
