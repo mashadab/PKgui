@@ -26,7 +26,7 @@ Alpha: Pbk parameter [-],   Beta:  Pbk parameter [-],   z: Free surface height [
 
 1. Download the executables from [Google drive](https://drive.google.com/drive/u/0/folders/184aby8uWy1ZTMGidqhQwq9rfznjocVY1).
 
-2. Run the program (takes a few seconds to boot).:
+2. Run the exe file (takes a few seconds to boot).:
 
     a. Mac: - If it does not recognize the file, then:
             - Change permissions of the file using ```chmod 777 Pbk_Mac```
