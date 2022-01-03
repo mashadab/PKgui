@@ -28,9 +28,9 @@ Alpha: Pbk parameter [-],   Beta:  Pbk parameter [-],   z: Free surface height [
 
 2. Run the program (takes a few seconds to boot).:
 
-    a. Mac: - If it does not recognize the file, then run the file in terminal for the first time as ``` ./Pbk_Mac```
+    a. Mac: - If it does not recognize the file, then:
             - Change permissions of the file using ```chmod 777 Pbk_Mac```
-            - Choose Apple menu > System Preferences, click Security & Privacy, then click General. You can grant an exception for a blocked app by clicking the “Open Anyway” button in the General pane.
+            - Choose Apple menu > System Preferences, click Security & Privacy, then click General. You can grant an exception for a blocked app by clicking the “Open Anyway” button in the General pane (takes about 2-10 minutes to appear).
             
     b. Windows: Run as Administrator
 
