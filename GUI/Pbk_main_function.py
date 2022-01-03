@@ -53,12 +53,12 @@ def PbK_solution(H_full,L_full,H1,n,output_folder,unit):
     print("======================")
     print("Given values")
     print("======================")
-    print("1.) Lake level, H: \t", H)
-    print("2.) Aquifer length, L: \t", L)
+    print("1.) Lake level, H: \t", H1*H)
+    print("2.) Aquifer length, L: \t", H1*L)
     print("======================")
     print("Output values")
     print("======================")
-    print("1.) Seepage face height, H0: \t", H0_func(res.x[0],res.x[1],res.x[2])) 
+    print("1.) Seepage face height, H0: \t", H1*H0_func(res.x[0],res.x[1],res.x[2])) 
     print("2.) alpha: \t", res.x[0])
     print("3.) beta: \t", res.x[1])
     print("4.) C: \t \t", res.x[2] )
@@ -66,7 +66,7 @@ def PbK_solution(H_full,L_full,H1,n,output_folder,unit):
     print("======================")
     print("Free surface profiles")
     print("======================")
-    print("Psi \t \t x \t \t z")
+    print(f"Psi \t x {unit} \t z {unit}")
     Psi_array = linspace(0,10,n+1)
     x_array = []
     z_array = []
@@ -79,12 +79,12 @@ def PbK_solution(H_full,L_full,H1,n,output_folder,unit):
         xz_array.append([x,z])
         x_array.append(x)
         if i%(int(n/20)) == 0 and x != inf and x!=-inf and x>=0:    
-            print(Psi_array[i],'\t',x,'\t','\t','\t','\t', z)
+            print(Psi_array[i],'\t',H1*x,'\t','\t','\t','\t', H1*z)
     x_array  = array(x_array)
     xz_array = array(xz_array)
     xz_array[x_array<0,:] = nan
     xz_array[x_array>L,:] = nan
-    
+    xz_array = H1*xz_array
     fig = figure(figsize=(6,6) , dpi=100)
     ax = fig.add_subplot(111)
     ax.plot(H1*xz_array[:,0],H1*xz_array[:,1],'b-')
@@ -105,7 +105,7 @@ def PbK_solution(H_full,L_full,H1,n,output_folder,unit):
     
     fig = figure(figsize=(10,10), dpi=50)
     ax = fig.add_subplot(111)
-    ax.plot(H1*xz_array[:,0],H1*xz_array[:,1],'b-')
+    ax.plot(xz_array[:,0],xz_array[:,1],'b-')
     ax.vlines(0,0,H1,colors='blue') 
     ax.vlines(H1*L,0,H1*H+H1*H0_func(res.x[0],res.x[1],res.x[2]),colors='blue')  
     ax.vlines(H1*L,0,H1*H,colors='blue') 
@@ -118,11 +118,11 @@ def PbK_solution(H_full,L_full,H1,n,output_folder,unit):
     
     H0 = H0_func(res.x[0],res.x[1],res.x[2]) 
     fig.savefig(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/free-surface-profile.png")
-    
+
     names = ['Unit','Dam length L', 'Lower lake level H', 'Upper lake level H1', 'Seepage face height H0', 'alpha', 'beta', 'C' ]
     scores = [unit, L_full, H_full, H1,  H0, res.x[0],res.x[1],res.x[2] ]
     
-    xz_array[~isnan(xz_array).any(axis=1)]
+    xz_array = xz_array[~isnan(xz_array).any(axis=1),:]
     
     savetxt(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/details.csv", [p for p in zip(names, scores)], delimiter=',', fmt='%s')
     savetxt(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/free-surface-profiles_XandZ.csv", xz_array, delimiter=",")
