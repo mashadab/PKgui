@@ -77,7 +77,7 @@ while True:
             unit = str(values['-U-'])
             output_folder = str(values['-FOLDER-'])            
             H0, res, xz_array = PbK_solution(H,L,H1,N,output_folder,unit)
-            calc = H0
+            calc = H0*H1
             calc1 = res[0]
             calc2 = res[1]        
             calc3 = res[2]
