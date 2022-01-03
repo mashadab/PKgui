@@ -72,7 +72,7 @@ The output files include:
 4. free-surface-profile.png: Low-res image of the output figure
 
 ## Authors
-- Mohammad Afzal Shadab
+- Mohammad Afzal Shadab ([mashadab@utexas.edu](mailto:mashadab@utexas.edu))
 - Eric Hiatt
 - Marc Andre Hesse
 
