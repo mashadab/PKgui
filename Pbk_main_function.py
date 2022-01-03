@@ -120,7 +120,7 @@ def PbK_solution(H_full,L_full,H1,n,output_folder,unit):
     fig.savefig(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/free-surface-profile.png")
 
     names = ['Unit','Dam length L', 'Lower lake level H', 'Upper lake level H1', 'Seepage face height H0', 'alpha', 'beta', 'C' ]
-    scores = [unit, L_full, H_full, H1,  H0, res.x[0],res.x[1],res.x[2] ]
+    scores = [unit, L_full, H_full, H1,  H0*H1, res.x[0],res.x[1],res.x[2] ]
     
     xz_array = xz_array[~isnan(xz_array).any(axis=1),:]
     
