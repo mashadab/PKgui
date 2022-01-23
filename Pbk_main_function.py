@@ -261,9 +261,10 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
     #fig.show()
 
     H0 = H_scale*H0_func(res.x[0],res.x[1],res.x[2]) 
+    H1 = H_scale*H1_func(H,res.x[0],res.x[1],res.x[2])
     
-    mkdir(f"{output_folder}/L{L_full}{unit}_H{H_scale*H}{unit}_H1_{H_scale*H1}{unit}_N{n}")
-    fig.savefig(f"{output_folder}/L{L_full}{unit}_H{H_scale*H}{unit}_H1_{H_scale*H1}{unit}_N{n}/free-surface-profile.pdf")
+    mkdir(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}")
+    fig.savefig(f"{output_folder}/L{L_full}{unit}_H{H_scale*H}{unit}_H1_{H1}{unit}_N{n}/free-surface-profile.pdf")
     
     fig = figure(figsize=(10,10), dpi=50)
     ax = fig.add_subplot(111)
@@ -284,7 +285,7 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
     
     xz_array = xz_array[~isnan(xz_array).any(axis=1),:]
     
-    savetxt(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H_scale*H1}{unit}_N{n}/details.csv", [p for p in zip(names, scores)], delimiter=',', fmt='%s')
-    savetxt(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H_scale*H1}{unit}_N{n}/free-surface-profiles_XandZ.csv", xz_array, delimiter=",")
+    savetxt(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/details.csv", [p for p in zip(names, scores)], delimiter=',', fmt='%s')
+    savetxt(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/free-surface-profiles_XandZ.csv", xz_array, delimiter=",")
     
     return H0, H_full, L_full, res.x, xz_array,Q,K, H_scale*H1_func(H,res.x[0],res.x[1],res.x[2])
