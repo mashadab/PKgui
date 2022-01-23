@@ -172,14 +172,14 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
         print("4.) C: \t \t", res.x[2] )      
         if isnan(Q) and ~isnan(K): 
             Q = K*H_scale*QbyK_func(res.x[0],res.x[1],res.x[2]) 
-            QbyK = Q/(H_scale*QbyK_func(res.x[0],res.x[1],res.x[2])) 
-            print("5.) Specific discharge, Q: \t \t", Q, f'{unit}^2/{Tunit}' ) 
+            QbyK = H_scale*QbyK_func(res.x[0],res.x[1],res.x[2]) 
+            print("5.) Specific discharge, Q: \t \t", Q, f'{unit}^2/{Tunit}') 
         elif ~isnan(Q) and isnan(K): 
             K = Q/(H_scale*QbyK_func(res.x[0],res.x[1],res.x[2])) 
-            QbyK = Q/(H_scale*QbyK_func(res.x[0],res.x[1],res.x[2])) 
-            print("5.) Hydraulic conductivity, K: \t \t", K ,f'{unit}/{Tunit}' ) 
+            QbyK = H_scale*QbyK_func(res.x[0],res.x[1],res.x[2])
+            print("5.) Hydraulic conductivity, K: \t \t", K ,f'{unit}/{Tunit}') 
         elif isnan(Q) and isnan(K): 
-            QbyK = Q/(H_scale*QbyK_func(res.x[0],res.x[1],res.x[2]))     
+            QbyK = H_scale*QbyK_func(res.x[0],res.x[1],res.x[2])     
             print("5.) Neither K or Q given") 
 
     elif ~isnan(H_full) and isnan(H1) and isnan(H0):
@@ -203,7 +203,6 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
         print("5.) Higher lake level, H1: \t", H_scale*H1_func(H,res.x[0],res.x[1],res.x[2]),f"{unit}")   
         
     elif isnan(H_full) and ~isnan(H1) and isnan(H0):        
-        print('A good case')
         H_scale = H1
         H1 = H1/H_scale
         L = L_full/H_scale
@@ -262,9 +261,8 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
 
     H0 = H_scale*H0_func(res.x[0],res.x[1],res.x[2]) 
     H1 = H_scale*H1_func(H,res.x[0],res.x[1],res.x[2])
-    
     mkdir(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}")
-    fig.savefig(f"{output_folder}/L{L_full}{unit}_H{H_scale*H}{unit}_H1_{H1}{unit}_N{n}/free-surface-profile.pdf")
+    fig.savefig(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/free-surface-profile.pdf")
     
     fig = figure(figsize=(10,10), dpi=50)
     ax = fig.add_subplot(111)
@@ -278,14 +276,15 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
     ax.set_ylabel(f'z [{unit}]')
     tight_layout(pad=1, w_pad=0.8, h_pad=1)
     #fig.show()
-    fig.savefig(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H_scale*H1}{unit}_N{n}/free-surface-profile.png")
+    fig.savefig(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/free-surface-profile.png")
 
-    names = ['Unit','Dam length L', 'Lower lake level H', 'Upper lake level H1', 'Seepage face height H0', 'alpha', 'beta', 'C' ]
-    scores = [unit, L_full, H_full, H_scale*H1,  H0*H_scale, res.x[0],res.x[1],res.x[2] ]
+    names = ['Length Unit','Time Unit','Dam length L', 'Lower lake level H', 'Upper lake level H1', 'Seepage face height H0', 'Specific discharge Q', 'Hydraulic conductivity K' , 'alpha', 'beta', 'C' ]
+    scores= [unit, Tunit, L_full, H_full, H1,  H0, Q, K, res.x[0],res.x[1],res.x[2] ]
     
-    xz_array = xz_array[~isnan(xz_array).any(axis=1),:]
-    
+    xz_array = xz_array[~isnan(xz_array).any(axis=1),:] 
+ 
     savetxt(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/details.csv", [p for p in zip(names, scores)], delimiter=',', fmt='%s')
     savetxt(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/free-surface-profiles_XandZ.csv", xz_array, delimiter=",")
+
     
     return H0, H_full, L_full, res.x, xz_array,Q,K, H_scale*H1_func(H,res.x[0],res.x[1],res.x[2])

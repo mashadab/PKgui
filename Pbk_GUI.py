@@ -21,7 +21,7 @@ file_list_column = [  [sg.Txt('Polubarinova-Kochina Solution',font = ("Serif", 2
            [sg.Txt('Input variables ',font = ("Serif", 18,'bold','italic'))],
            [sg.Txt('Length unit [e.g. m]',font = ("Serif", 13)), sg.Txt(' \t ',font = ("Serif", 10)),sg.Txt('Time unit [e.g. day]',font = ("Serif", 13))],
            [sg.In(size=(4,1), key='-U-',font = ("Serif", 13)),sg.Txt('\t\t\t',font = ("Serif", 10)),sg.In(size=(4,1), key='-U2-',font = ("Serif", 13))],
-           [sg.Txt('Dam length, L * [e.g. 100]',font = ("Serif", 13))],
+           [sg.Txt('Dam length, L* [e.g. 100]',font = ("Serif", 13))],
            [sg.In(size=(8,1), key='-L-',font = ("Serif", 13))],
            [sg.Txt('Lower lake height, H  [e.g. 10]',font = ("Serif", 13))],
            [sg.In(size=(8,1), key='-H-',font = ("Serif", 13))],
@@ -31,7 +31,7 @@ file_list_column = [  [sg.Txt('Polubarinova-Kochina Solution',font = ("Serif", 2
            [sg.In(size=(8,1), key='-Q-',font = ("Serif", 13))],
            [sg.Txt('Hydraulic conductivity, K  [e.g. 2]',font = ("Serif", 13))],
            [sg.In(size=(8,1), key='-K-',font = ("Serif", 13))],
-           [sg.Txt('Rough number of points at free-surface, N * [e.g. 1000]',font = ("Serif", 13))],
+           [sg.Txt('Rough number of points at free-surface, N* [e.g. 1000]',font = ("Serif", 13))],
            [sg.In(size=(8,1), key='-N-',font = ("Serif", 13))],
            [sg.Text("Output Folder  [e.g. /Users/admin/Desktop]",font = ("Serif", 13))],
            [
@@ -39,17 +39,13 @@ file_list_column = [  [sg.Txt('Polubarinova-Kochina Solution',font = ("Serif", 2
             sg.FolderBrowse(font = ("Serif", 13)),
             ],
            [sg.Txt(' ',font = ("Serif", 2))], 
-           [sg.Button('Calculate', bind_return_key=True,font = ("Serif", 15))],
-           [sg.Txt('______________________________________________',font = ("Serif", 18))],
+           [sg.Button('Calculate', bind_return_key=True,font = ("Serif", 20))],
+           [sg.Txt('',font = ("Serif", 22,'bold','italic'))],
+           
            ]
 
 #for now will only show the name of the chosen file
 image_viewer_column = [
-            [sg.Txt('',font = ("Serif", 5))], 
-             [sg.Txt('About Us',font = ("Serif", 18,'bold','italic'))],
-             [sg.Txt('M.A. Shadab, E. Hiatt & M.A. Hesse',font = ("Serif", 15))],
-             [sg.Txt('The University of Texas at Austin',font = ("Serif", 15))],
-             [sg.Txt('Contact: mashadab@utexas.edu',font = ("Arial", 15))],
            [sg.Txt('Output details',font = ("Serif", 18,'bold','italic'))],
            [sg.Text("Location:",font = ("Serif", 13)),
             sg.Text(size=(50,1), key="-TOUT-",font = ("Serif", 13))],
@@ -57,9 +53,12 @@ image_viewer_column = [
            [sg.Txt('Alpha :',font = ("Serif", 13)),sg.Txt(size=(30,1), key='-OUTPUT1-')  ],
            [sg.Txt('Beta :',font = ("Serif", 13)),sg.Txt(size=(30,1), key='-OUTPUT2-')  ],
            [sg.Txt('C :',font = ("Serif", 13)),sg.Txt(size=(30,1), key='-OUTPUT3-')  ],
-           [sg.Txt('Free surface profile:',font = ("Serif", 13))],
            [sg.Txt(' ',font = ("Serif", 2))],
             [sg.Image(size=(600,490),key="-IMAGE-")],
+           [sg.Txt('______________________________________________________________________',font = ("Serif", 18))],
+             [sg.Txt('Developed by:',font = ("Serif", 15,'bold')),sg.Txt('M.A. Shadab*, E. Hiatt & M.A. Hesse',font = ("Serif", 15))],
+             [sg.Txt('The University of Texas at Austin \t \ ',font = ("Serif", 15,'italic')),sg.Txt('* mashadab@utexas.edu',font = ("Serif", 15))],
+             [sg.Txt('',font = ("Serif", 2))],
 ]
 
 layout = [
@@ -77,35 +76,35 @@ while True:
 
     if event != sg.WIN_CLOSED:  
         if values['-H-'] == '':
-            H = 100#nan
+            H = nan
         else: 
             H = float(values['-H-'])
         if values['-H1-'] == '':
-            H1 = 110#nan
+            H1 = nan
         else: 
             H1 = float(values['-H1-'])
         if values['-L-'] == '':
-            L = 100#nan
+            L = nan
         else: 
             L = float(values['-L-'])
 
         if values['-N-'] == '':
-            N = 100
+            N = 1000
         else: 
             N = int(values['-N-'])
         
         if values['-U-'] == '':
-            unit = 'Length unit'
+            unit = 'Length-unit'
         else: 
             unit = str(values['-U-'])
 
         if values['-U2-'] == '':
-            Tunit = 'Time unit'
+            Tunit = 'Time-unit'
         else: 
             Tunit = str(values['-U2-'])        
         
         if values['-Q-'] == '':
-            Q = 1#nan
+            Q = nan
         else: 
             Q = float(values['-Q-'])
 
@@ -116,19 +115,18 @@ while True:
         
         
         if values['-FOLDER-'] == '':
-            output_folder = '/Users/afzal-admin/Desktop/Eric/Trial'
+            output_folder = 'Set an output folder path'
         else: 
             output_folder = str(values['-FOLDER-'])
         
-        
-        try:
-            H0, H, L, res, xz_array,Q,K, H1 = PbK_solution_full(nan,H,L,H1,N,output_folder,Q,K,unit,Tunit)
-            calc = H0
-            calc1 = res[0]
-            calc2 = res[1]        
-            calc3 = res[2]
-            print('Worked')
-        except:
+
+        H0, H, L, res, xz_array,Q,K, H1 = PbK_solution_full(nan,H,L,H1,N,output_folder,Q,K,unit,Tunit)
+        calc = H0
+        calc1 = res[0]
+        calc2 = res[1]        
+        calc3 = res[2]
+        print('Worked')
+        if isnan(H0) and isnan(H1) and isnan(res):
             print('Did not work')
             calc = 'Invalid H0'
             calc1 = 'Invalid Alpha'
@@ -139,7 +137,7 @@ while True:
         window['-OUTPUT1-'].update(calc1,font = ("Serif", 13))
         window['-OUTPUT2-'].update(calc2,font = ("Serif", 13))
         window['-OUTPUT3-'].update(calc3,font = ("Serif", 13))
-        print(output_folder)
+
         filename = f"{output_folder}/L{L}{unit}_H{H}{unit}_H1_{H1}{unit}_N{N}"
         window["-TOUT-"].update(filename,font = ("Serif", 13))
         filename = f"{output_folder}/L{L}{unit}_H{H}{unit}_H1_{H1}{unit}_N{N}/free-surface-profile.png"
