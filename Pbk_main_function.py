@@ -45,6 +45,10 @@ def QbyK_res_func(QbyK,alpha, beta,C):
  return QbyK - C*sqrt(alpha)*quad(lambda phi: (ellipk(1 - alpha * sin(phi)**2)*sin(phi))/sqrt((1 - alpha* sin(phi)**2)*(beta - alpha* sin(phi)**2)), 0, pi/2)[0]
 
 
+def H1_func(H,alpha, beta,C):
+ return H + H0_func(alpha, beta,C) + C*quad(lambda phi: (ellipk(cos(phi)**2)*sin(phi))/sqrt((1 - alpha* sin(phi)**2)*(1 - beta* sin(phi)**2)), 0, pi/2)[0]
+
+
 def PbK_solution(H_full,L_full,H1,n,output_folder,unit):
     
     H = H_full/H1
@@ -69,8 +73,7 @@ def PbK_solution(H_full,L_full,H1,n,output_folder,unit):
     print("3.) beta: \t", res.x[1])
     print("4.) C: \t \t", res.x[2] )
     
-    
-    
+
     
     print("======================")
     print("Free surface profiles")
@@ -142,8 +145,9 @@ def PbK_solution(H_full,L_full,H1,n,output_folder,unit):
 
 def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
     if ~isnan(H_full) and ~isnan(H1) and isnan(H0):
-        H = H_full/H1
-        L = L_full/H1
+        H_scale = H1
+        H = H_full/H_scale
+        L = L_full/H_scale
         
         def full_equations(p):
             alpha, beta, C = p
@@ -154,32 +158,54 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
         print("======================")
         print("Given values")
         print("======================")
-        print("1.) Lake level, H: \t", H1*H)
-        print("2.) Aquifer length, L: \t", H1*L)
+        print("1.) Lake level, H: \t", H_scale*H)
+        print("2.) Aquifer length, L: \t", H_scale*L)
         print("======================")
         print("Output values")
         print("======================")
-        print("1.) Seepage face height, H0: \t", H1*H0_func(res.x[0],res.x[1],res.x[2])) 
+        print("1.) Seepage face height, H0: \t", H_scale*H0_func(res.x[0],res.x[1],res.x[2])) 
         print("2.) alpha: \t", res.x[0])
         print("3.) beta: \t", res.x[1])
         print("4.) C: \t \t", res.x[2] )  
         print('Q',Q, 'K',K)      
         if isnan(Q) and ~isnan(K): 
-            Q = K*H1*QbyK_func(res.x[0],res.x[1],res.x[2]) 
-            QbyK = Q/(H1*QbyK_func(res.x[0],res.x[1],res.x[2])) 
+            Q = K*H_scale*QbyK_func(res.x[0],res.x[1],res.x[2]) 
+            QbyK = Q/(H_scale*QbyK_func(res.x[0],res.x[1],res.x[2])) 
             print("5.) Specific discharge, Q: \t \t", Q, f'{unit}^2/{Tunit}' ) 
         elif ~isnan(Q) and isnan(K): 
-            K = Q/(H1*QbyK_func(res.x[0],res.x[1],res.x[2])) 
-            QbyK = Q/(H1*QbyK_func(res.x[0],res.x[1],res.x[2])) 
+            K = Q/(H_scale*QbyK_func(res.x[0],res.x[1],res.x[2])) 
+            QbyK = Q/(H_scale*QbyK_func(res.x[0],res.x[1],res.x[2])) 
             print("5.) Hydraulic conductivity, K: \t \t", K ,f'{unit}/{Tunit}' ) 
         elif isnan(Q) and isnan(K): 
-            QbyK = Q/(H1*QbyK_func(res.x[0],res.x[1],res.x[2]))     
+            QbyK = Q/(H_scale*QbyK_func(res.x[0],res.x[1],res.x[2]))     
             print("5.) Neither K or Q given") 
 
-
-
-
-    print(f"6.) Specific discharge over hydraulic conductivity, q/K {unit}: \t \t", H1*QbyK_func(res.x[0], res.x[1],res.x[2]))          
+    elif ~isnan(H_full) and isnan(H1) and isnan(H0):
+        H_scale = H_full
+        H = H_full/H_scale
+        L = L_full/H_scale
+        
+        def full_equations(p):
+            alpha, beta, C = p
+            return (L_res_func(L,alpha, beta,C), H_res_func(H,alpha, beta,C),QbyK_res_func(Q/(K*H_scale),alpha, beta,C))
+        
+        res = least_squares(full_equations, (0.0001, 0.1,1), bounds = ((0, 0,0), (1,1,10)))
+        
+        print("======================")
+        print("Given values")
+        print("======================")
+        print("1.) Lake level, H: \t", H_scale*H)
+        print("2.) Aquifer length, L: \t", H_scale*L)
+        print("======================")
+        print("Output values")
+        print("======================")
+        print("1.) Seepage face height, H0: \t", H_scale*H0_func(res.x[0],res.x[1],res.x[2])) 
+        print("2.) alpha: \t", res.x[0])
+        print("3.) beta: \t", res.x[1])
+        print("4.) C: \t \t", res.x[2] )  
+        print("5.) Higher lake level, H1: \t", H_scale*H1_func(H,res.x[0],res.x[1],res.x[2]))   
+        
+    print(f"6.) Specific discharge over hydraulic conductivity, q/K {unit}: \t \t", H_scale*QbyK_func(res.x[0], res.x[1],res.x[2]))          
     print("======================")
     print("Free surface profiles")
     print("======================")
@@ -191,58 +217,58 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
     for i in range(0,n):
         x  = x_func(L,res.x[0], res.x[1],res.x[2],Psi_array[i])
         z  = z_func(H,res.x[0], res.x[1],res.x[2],Psi_array[i]) 
-        if x==0: z = 1
+        if x==0: z = H1_func(H,res.x[0],res.x[1],res.x[2])
         if x==L: z = H + H0_func(res.x[0],res.x[1],res.x[2]) 
         xz_array.append([x,z])
         x_array.append(x)
         if i%(int(n/20)) == 0 and x != inf and x!=-inf and x>=0:    
-            print(Psi_array[i],'\t',H1*x,'\t','\t','\t','\t', H1*z)
+            print(Psi_array[i],'\t',H_scale*x,'\t','\t','\t','\t', H_scale*z)
     x_array  = array(x_array)
     xz_array = array(xz_array)
     xz_array[x_array<0,:] = nan
     xz_array[x_array>L,:] = nan
-    xz_array = H1*xz_array
+    xz_array = H_scale*xz_array
     fig = figure(figsize=(6,6) , dpi=100)
     ax = fig.add_subplot(111)
-    ax.plot(H1*xz_array[:,0],H1*xz_array[:,1],'b-')
-    ax.vlines(0,0,H1,colors='blue') 
-    ax.vlines(H1*L,0,H1*H+H1*H0_func(res.x[0],res.x[1],res.x[2]),colors='blue')  
-    ax.vlines(H1*L,0,H1*H,colors='blue') 
-    ax.hlines(H1*H,H1*L,H1*1.1*L,colors='blue')   
-    ax.hlines(0,0,H1*1.1*L,colors='blue')   
+    ax.plot(H_scale*xz_array[:,0],H_scale*xz_array[:,1],'b-')
+    
+    '''
+    ax.vlines(0,0,H_scale,colors='blue') 
+    ax.vlines(H_scale*L,0,H_scale*H+H_scale*H0_func(res.x[0],res.x[1],res.x[2]),colors='blue')  
+    ax.vlines(H_scale*L,0,H_scale*H,colors='blue') 
+    ax.hlines(H_scale*H,H_scale*L,H_scale*1.1*L,colors='blue')   
+    ax.hlines(0,0,H_scale*1.1*L,colors='blue')   
     ax.set_xlabel(f'x [{unit}]')
     ax.set_ylabel(f'z [{unit}]')
     tight_layout(pad=1, w_pad=0.8, h_pad=1)
     #fig.show()
+    '''
+    H0 = H_scale*H0_func(res.x[0],res.x[1],res.x[2]) 
     
-    H0 = H0_func(res.x[0],res.x[1],res.x[2]) 
-    
-    mkdir(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}")
-    fig.savefig(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/free-surface-profile.pdf")
+    mkdir(f"{output_folder}/L{L_full}{unit}_H{H_scale*H}{unit}_H1_{H_scale*H1}{unit}_N{n}")
+    fig.savefig(f"{output_folder}/L{L_full}{unit}_H{H_scale*H}{unit}_H1_{H_scale*H1}{unit}_N{n}/free-surface-profile.pdf")
     
     fig = figure(figsize=(10,10), dpi=50)
     ax = fig.add_subplot(111)
-    ax.plot(xz_array[:,0],xz_array[:,1],'b-')
-    ax.vlines(0,0,H1,colors='blue') 
-    ax.vlines(H1*L,0,H1*H+H1*H0_func(res.x[0],res.x[1],res.x[2]),colors='blue')  
-    ax.vlines(H1*L,0,H1*H,colors='blue') 
-    ax.hlines(H1*H,H1*L,H1*1.1*L,colors='blue')   
-    ax.hlines(0,0,H1*1.1*L,colors='blue')   
+    ax.plot(H_scale*xz_array[:,0],H_scale*xz_array[:,1],'b-')
+    ax.vlines(0,0,H_scale,colors='blue') 
+    ax.vlines(H_scale*L,0,H_scale*H+H_scale*H0_func(res.x[0],res.x[1],res.x[2]),colors='blue')  
+    ax.vlines(H_scale*L,0,H_scale*H,colors='blue') 
+    ax.hlines(H_scale*H,H_scale*L,H_scale*1.1*L,colors='blue')   
+    ax.hlines(0,0,H_scale*1.1*L,colors='blue')   
     ax.set_xlabel(f'x [{unit}]')
     ax.set_ylabel(f'z [{unit}]')
     tight_layout(pad=1, w_pad=0.8, h_pad=1)
     #fig.show()
-    
-    H0 = H0_func(res.x[0],res.x[1],res.x[2]) 
-    fig.savefig(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/free-surface-profile.png")
+    fig.savefig(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H_scale*H1}{unit}_N{n}/free-surface-profile.png")
 
     names = ['Unit','Dam length L', 'Lower lake level H', 'Upper lake level H1', 'Seepage face height H0', 'alpha', 'beta', 'C' ]
-    scores = [unit, L_full, H_full, H1,  H0*H1, res.x[0],res.x[1],res.x[2] ]
+    scores = [unit, L_full, H_full, H_scale*H1,  H0*H_scale, res.x[0],res.x[1],res.x[2] ]
     
     xz_array = xz_array[~isnan(xz_array).any(axis=1),:]
     
-    savetxt(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/details.csv", [p for p in zip(names, scores)], delimiter=',', fmt='%s')
-    savetxt(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/free-surface-profiles_XandZ.csv", xz_array, delimiter=",")
+    savetxt(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H_scale*H1}{unit}_N{n}/details.csv", [p for p in zip(names, scores)], delimiter=',', fmt='%s')
+    savetxt(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H_scale*H1}{unit}_N{n}/free-surface-profiles_XandZ.csv", xz_array, delimiter=",")
     
     return H0, res.x, xz_array
 
