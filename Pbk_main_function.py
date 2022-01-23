@@ -203,7 +203,7 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
         print("2.) alpha: \t", res.x[0])
         print("3.) beta: \t", res.x[1])
         print("4.) C: \t \t", res.x[2] )  
-        print("5.) Higher lake level, H1: \t", H_scale*H1_func(H,res.x[0],res.x[1],res.x[2]))   
+        print("5.) Higher lake level, H1: \t", H_scale*H1_func(H,res.x[0],res.x[1],res.x[2]),f"{unit}")   
         
     print(f"6.) Specific discharge over hydraulic conductivity, q/K {unit}: \t \t", H_scale*QbyK_func(res.x[0], res.x[1],res.x[2]))          
     print("======================")
@@ -230,10 +230,8 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
     xz_array = H_scale*xz_array
     fig = figure(figsize=(6,6) , dpi=100)
     ax = fig.add_subplot(111)
-    ax.plot(H_scale*xz_array[:,0],H_scale*xz_array[:,1],'b-')
-    
-    '''
-    ax.vlines(0,0,H_scale,colors='blue') 
+    ax.plot(xz_array[:,0],xz_array[:,1],'b-')
+    ax.vlines(0,0,H_scale*H1_func(H,res.x[0],res.x[1],res.x[2]),colors='blue') 
     ax.vlines(H_scale*L,0,H_scale*H+H_scale*H0_func(res.x[0],res.x[1],res.x[2]),colors='blue')  
     ax.vlines(H_scale*L,0,H_scale*H,colors='blue') 
     ax.hlines(H_scale*H,H_scale*L,H_scale*1.1*L,colors='blue')   
@@ -242,7 +240,7 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
     ax.set_ylabel(f'z [{unit}]')
     tight_layout(pad=1, w_pad=0.8, h_pad=1)
     #fig.show()
-    '''
+
     H0 = H_scale*H0_func(res.x[0],res.x[1],res.x[2]) 
     
     mkdir(f"{output_folder}/L{L_full}{unit}_H{H_scale*H}{unit}_H1_{H_scale*H1}{unit}_N{n}")
@@ -250,7 +248,7 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
     
     fig = figure(figsize=(10,10), dpi=50)
     ax = fig.add_subplot(111)
-    ax.plot(H_scale*xz_array[:,0],H_scale*xz_array[:,1],'b-')
+    ax.plot(xz_array[:,0],xz_array[:,1],'b-')
     ax.vlines(0,0,H_scale,colors='blue') 
     ax.vlines(H_scale*L,0,H_scale*H+H_scale*H0_func(res.x[0],res.x[1],res.x[2]),colors='blue')  
     ax.vlines(H_scale*L,0,H_scale*H,colors='blue') 
