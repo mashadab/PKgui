@@ -11,11 +11,14 @@ sg.theme('Dark Green 7')
 
 
 #window layout of two columns
-file_list_column = [  [sg.Txt('Polubarinova-Kochina Solution',font = ("Serif", 25,"bold"))],
+file_list_column = [  [sg.Txt('Polubarinova-Kochina Solution',font = ("Serif", 28,"bold"))],
            [sg.Txt('  ',font = ("Serif", 10))],
+           [sg.Txt('Developed by:',font = ("Serif", 15,'bold')),sg.Txt('M.A. Shadab*, E. Hiatt & M.A. Hesse',font = ("Serif", 15))],
+           [sg.Txt('The University of Texas at Austin    \ ',font = ("Serif", 15,'italic')),sg.Txt('* mashadab@utexas.edu',font = ("Serif", 15))],
+           [sg.Txt('',font = ("Serif", 2))],
            [sg.Txt('Notes: - All units must be consistent.',font = ("Serif", 15))],
            [sg.Txt('            - For low-aspect ratio dams.',font = ("Serif", 15))],
-           [sg.Txt('            - Fill 4 of the following.',font = ("Serif", 15))],
+           [sg.Txt('            - Fill checkboxes and enter exactly 4 variables.',font = ("Serif", 15))],
            [sg.Txt('_________________________________________________________',font = ("Serif", 18))],
            [sg.Txt('Input variables ',font = ("Serif", 18,'bold','italic'))],
            [sg.Txt('Units:   Length [e.g. m]',font = ("Serif", 15)), 
@@ -34,17 +37,14 @@ file_list_column = [  [sg.Txt('Polubarinova-Kochina Solution',font = ("Serif", 2
             sg.Radio('High',"RADIO1",font = ("Serif", 15), default=False, key="-CheckHighRes-"),
             sg.Radio('Very high',"RADIO1",font = ("Serif", 15), default=False, key="-CheckVHRes-")],
            [sg.Txt(' ',font = ("Serif", 2))], 
-           [sg.Button('Calculate', bind_return_key=True,font = ("Serif", 20))],
+           [sg.Button('\t   Calculate \t \t ', bind_return_key=True,font = ("Serif", 20,'bold','italic'))],
            [sg.Text("Output Folder  [e.g. /Users/admin/Desktop]",font = ("Serif", 15))],
            [
             sg.In(size=(24,1), key="-FOLDER-",font = ("Serif", 15)),
-            sg.FolderBrowse(font = ("Serif", 15)),
-            sg.Button('Save', bind_return_key=True,font = ("Serif", 15,'italic','bold'))
-            ],
-           [sg.Txt('_________________________________________________________',font = ("Serif", 18))],
-             [sg.Txt('Developed by:',font = ("Serif", 15,'bold')),sg.Txt('M.A. Shadab*, E. Hiatt & M.A. Hesse',font = ("Serif", 15))],
-             [sg.Txt('The University of Texas at Austin \t \ ',font = ("Serif", 15,'italic')),sg.Txt('* mashadab@utexas.edu',font = ("Serif", 15))],
-             [sg.Txt('',font = ("Serif", 2))],
+            sg.FolderBrowse(font = ("Serif", 20)),
+            sg.Txt('    ',font = ("Serif", 15)),
+            sg.Button('Save', bind_return_key=True,font = ("Serif", 20,'italic','bold'))
+            ]
            ]
 
 #for now will only show the name of the chosen file
