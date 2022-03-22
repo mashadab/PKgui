@@ -16,7 +16,7 @@ file_list_column = [  [sg.Txt('Polubarinova-Kochina Solution',font = ("Serif", 2
            [sg.Txt('Notes: - All units must be consistent.',font = ("Serif", 15))],
            [sg.Txt('            - For low-aspect ratio dams.',font = ("Serif", 15))],
            [sg.Txt('            - Fill 4 of the following.',font = ("Serif", 15))],
-           [sg.Txt('______________________________________________',font = ("Serif", 18))],
+           [sg.Txt('_________________________________________________________',font = ("Serif", 18))],
            [sg.Txt('Input variables ',font = ("Serif", 18,'bold','italic'))],
            [sg.Txt('Units:   Length [e.g. m]',font = ("Serif", 15)), 
             sg.In(size=(4,1), key='-U-',font = ("Serif", 15)),
@@ -41,6 +41,10 @@ file_list_column = [  [sg.Txt('Polubarinova-Kochina Solution',font = ("Serif", 2
             sg.FolderBrowse(font = ("Serif", 15)),
             sg.Button('Save', bind_return_key=True,font = ("Serif", 15,'italic','bold'))
             ],
+           [sg.Txt('_________________________________________________________',font = ("Serif", 18))],
+             [sg.Txt('Developed by:',font = ("Serif", 15,'bold')),sg.Txt('M.A. Shadab*, E. Hiatt & M.A. Hesse',font = ("Serif", 15))],
+             [sg.Txt('The University of Texas at Austin \t \ ',font = ("Serif", 15,'italic')),sg.Txt('* mashadab@utexas.edu',font = ("Serif", 15))],
+             [sg.Txt('',font = ("Serif", 2))],
            ]
 
 #for now will only show the name of the chosen file
@@ -53,11 +57,7 @@ image_viewer_column = [
            [sg.Txt('Beta :',font = ("Serif", 13)),sg.Txt(size=(30,1), key='-OUTPUT2-')  ],
            [sg.Txt('C :',font = ("Serif", 13)),sg.Txt(size=(30,1), key='-OUTPUT3-')  ],
            [sg.Txt(' ',font = ("Serif", 2))],
-            [sg.Image(size=(600,490),key="-IMAGE-")],
-           [sg.Txt('______________________________________________________________________',font = ("Serif", 18))],
-             [sg.Txt('Developed by:',font = ("Serif", 15,'bold')),sg.Txt('M.A. Shadab*, E. Hiatt & M.A. Hesse',font = ("Serif", 15))],
-             [sg.Txt('The University of Texas at Austin \t \ ',font = ("Serif", 15,'italic')),sg.Txt('* mashadab@utexas.edu',font = ("Serif", 15))],
-             [sg.Txt('',font = ("Serif", 2))],
+            [sg.Image(size=(600,490),key="-IMAGE-")]
 ]
 
 layout = [
