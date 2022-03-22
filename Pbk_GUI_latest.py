@@ -21,27 +21,29 @@ file_list_column = [  [sg.Txt('Polubarinova-Kochina Solution',font = ("Serif", 2
            [sg.Txt('Input variables ',font = ("Serif", 18,'bold','italic'))],
            [sg.Txt('Length unit [e.g. m]',font = ("Serif", 13)), sg.Txt(' \t ',font = ("Serif", 10)),sg.Txt('Time unit [e.g. day]',font = ("Serif", 13))],
            [sg.In(size=(4,1), key='-U-',font = ("Serif", 13)),sg.Txt('\t\t\t',font = ("Serif", 10)),sg.In(size=(4,1), key='-U2-',font = ("Serif", 13))],
-           [sg.Txt('Dam length, L* [e.g. 100]',font = ("Serif", 13))],
+           [sg.Checkbox('Dam length, L* [e.g. 100]',font = ("Serif", 13), default=False, key="-CheckL-")],
            [sg.In(size=(8,1), key='-L-',font = ("Serif", 13))],
-           [sg.Txt('Lower lake height, H  [e.g. 10]',font = ("Serif", 13))],
+           [sg.Checkbox('Lower lake height, H  [e.g. 10]',font = ("Serif", 13), default=False, key="-CheckH-")],
            [sg.In(size=(8,1), key='-H-',font = ("Serif", 13))],
-           [sg.Txt('Upper lake height, H1  [e.g. 110]',font = ("Serif", 13))],
+           [sg.Checkbox('Upper lake height, H1  [e.g. 110]',font = ("Serif", 13), default=False, key="-CheckH1-")],
            [sg.In(size=(8,1), key='-H1-',font = ("Serif", 13))],
-           [sg.Txt('Specific discharge, Q  [e.g. 1]',font = ("Serif", 13))],
+           [sg.Checkbox('Specific discharge, Q  [e.g. 1]',font = ("Serif", 13), default=False, key="-CheckQ-")],
            [sg.In(size=(8,1), key='-Q-',font = ("Serif", 13))],
-           [sg.Txt('Hydraulic conductivity, K  [e.g. 2]',font = ("Serif", 13))],
+           [sg.Checkbox('Hydraulic conductivity, K  [e.g. 2]',font = ("Serif", 13), default=False, key="-CheckK-")],
            [sg.In(size=(8,1), key='-K-',font = ("Serif", 13))],
-           [sg.Txt('Rough number of points at free-surface, N* [e.g. 1000]',font = ("Serif", 13))],
+           [sg.Txt('Free surface resolution',font = ("Serif", 13))],
+           [sg.Radio('Low',"RADIO1",font = ("Serif", 13), default=True, key="-CheckLowRes-"),
+            sg.Radio('High',"RADIO1",font = ("Serif", 13), default=False, key="-CheckHighRes-"),
+            sg.Radio('Very high',"RADIO1",font = ("Serif", 13), default=False, key="-CheckVHRes-")],
            [sg.In(size=(8,1), key='-N-',font = ("Serif", 13))],
-           [sg.Text("Output Folder  [e.g. /Users/admin/Desktop]",font = ("Serif", 13))],
-           [
-            sg.In(size=(30,1), key="-FOLDER-",font = ("Serif", 13)),
-            sg.FolderBrowse(font = ("Serif", 13)),
-            ],
            [sg.Txt(' ',font = ("Serif", 2))], 
            [sg.Button('Calculate', bind_return_key=True,font = ("Serif", 20))],
-           [sg.Txt('',font = ("Serif", 22,'bold','italic'))],
-           
+           [sg.Text("Output Folder  [e.g. /Users/admin/Desktop]",font = ("Serif", 13))],
+           [
+            sg.In(size=(24,1), key="-FOLDER-",font = ("Serif", 13)),
+            sg.FolderBrowse(font = ("Serif", 15)),
+            sg.Button('Save', bind_return_key=True,font = ("Serif", 15,'italic','bold'))
+            ],
            ]
 
 #for now will only show the name of the chosen file
