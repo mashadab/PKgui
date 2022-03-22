@@ -42,20 +42,20 @@ file_list_column = [  [sg.Txt('Polubarinova-Kochina Solution',font = ("Serif", 2
            [
             sg.In(size=(24,1), key="-FOLDER-",font = ("Serif", 15)),
             sg.FolderBrowse(font = ("Serif", 20)),
-            sg.Txt('    ',font = ("Serif", 15)),
-            sg.Button('Save', bind_return_key=True,font = ("Serif", 20,'italic','bold'))
+            sg.Txt(' ',font = ("Serif", 15)),
+            sg.Button('  Save  ', bind_return_key=True,font = ("Serif", 20,'italic','bold'))
             ]
            ]
 
 #for now will only show the name of the chosen file
 image_viewer_column = [
            [sg.Txt('Output details',font = ("Serif", 18,'bold','italic'))],
-           [sg.Text("Location:",font = ("Serif", 13)),
-            sg.Text(size=(50,1), key="-TOUT-",font = ("Serif", 13))],
-           [sg.Txt('Seepage face height, H0 :',font = ("Serif", 13)), sg.Txt(size=(30,1), key='-OUTPUT-')  ],
-           [sg.Txt('Alpha :',font = ("Serif", 13)),sg.Txt(size=(30,1), key='-OUTPUT1-')  ],
-           [sg.Txt('Beta :',font = ("Serif", 13)),sg.Txt(size=(30,1), key='-OUTPUT2-')  ],
-           [sg.Txt('C :',font = ("Serif", 13)),sg.Txt(size=(30,1), key='-OUTPUT3-')  ],
+           [sg.Text("Location:",font = ("Serif", 15)),
+            sg.Text(size=(50,1), key="-TOUT-",font = ("Serif", 15))],
+           [sg.Txt('Seepage face height, H0 :',font = ("Serif", 15)), sg.Txt(size=(30,1), key='-OUTPUT-')  ],
+           [sg.Txt('Alpha :',font = ("Serif", 15)),sg.Txt(size=(30,1), key='-OUTPUT1-')  ],
+           [sg.Txt('Beta :',font = ("Serif", 15)),sg.Txt(size=(30,1), key='-OUTPUT2-')  ],
+           [sg.Txt('C :',font = ("Serif", 15)),sg.Txt(size=(30,1), key='-OUTPUT3-')  ],
            [sg.Txt(' ',font = ("Serif", 2))],
             [sg.Image(size=(600,490),key="-IMAGE-")]
 ]
@@ -116,7 +116,7 @@ while True:
         
         
         if values['-FOLDER-'] == '':
-            output_folder = 'Set an output folder path'
+            output_folder = ''
         else: 
             output_folder = str(values['-FOLDER-'])
         
@@ -134,15 +134,16 @@ while True:
             calc2 = 'Invalid Beta'
             calc3 = 'Invalid C'
 
-        window['-OUTPUT-'].update(calc,font = ("Serif", 13))
-        window['-OUTPUT1-'].update(calc1,font = ("Serif", 13))
-        window['-OUTPUT2-'].update(calc2,font = ("Serif", 13))
-        window['-OUTPUT3-'].update(calc3,font = ("Serif", 13))
-
-        filename = f"{output_folder}/L{L}{unit}_H{H}{unit}_H1_{H1}{unit}_N{N}"
-        window["-TOUT-"].update(filename,font = ("Serif", 13))
-        filename = f"{output_folder}/L{L}{unit}_H{H}{unit}_H1_{H1}{unit}_N{N}/free-surface-profile.png"
-        window["-IMAGE-"].update(filename=filename)
+        window['-OUTPUT-'].update(calc,font = ("Serif", 15))
+        window['-OUTPUT1-'].update(calc1,font = ("Serif", 15))
+        window['-OUTPUT2-'].update(calc2,font = ("Serif", 15))
+        window['-OUTPUT3-'].update(calc3,font = ("Serif", 15))
+        
+        if not output_folder =='':
+            filename = f"{output_folder}/L{L}{unit}_H{H}{unit}_H1_{H1}{unit}_N{N}"
+            window["-TOUT-"].update(filename,font = ("Serif", 15))
+            filename = f"{output_folder}/L{L}{unit}_H{H}{unit}_H1_{H1}{unit}_N{N}/free-surface-profile.png"
+            window["-IMAGE-"].update(filename=filename)
     else:
         break
 
