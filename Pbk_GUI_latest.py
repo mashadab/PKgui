@@ -15,13 +15,12 @@ file_list_column = [  [sg.Txt('Polubarinova-Kochina Solution',font = ("Serif", 2
            [sg.Txt('  ',font = ("Serif", 10))],
            [sg.Txt('Notes: - All units must be consistent.',font = ("Serif", 13))],
            [sg.Txt('            - This method only works for low-aspect ratio dams.',font = ("Serif", 13))],
-           [sg.Txt('            - Fill in the known inputs while leave others blank.',font = ("Serif", 13))],
-           [sg.Txt('            - Asterisk (*) means mandatory.',font = ("Serif", 13))],
+           [sg.Txt('            - Fill 4 of the following.',font = ("Serif", 13))],
            [sg.Txt('______________________________________________',font = ("Serif", 18))],
            [sg.Txt('Input variables ',font = ("Serif", 18,'bold','italic'))],
            [sg.Txt('Length unit [e.g. m]',font = ("Serif", 13)), sg.Txt(' \t ',font = ("Serif", 10)),sg.Txt('Time unit [e.g. day]',font = ("Serif", 13))],
            [sg.In(size=(4,1), key='-U-',font = ("Serif", 13)),sg.Txt('\t\t\t',font = ("Serif", 10)),sg.In(size=(4,1), key='-U2-',font = ("Serif", 13))],
-           [sg.Checkbox('Dam length, L* [e.g. 100]',font = ("Serif", 13), default=False, key="-CheckL-")],
+           [sg.Checkbox('Dam length, L [e.g. 100]',font = ("Serif", 13), default=False, key="-CheckL-")],
            [sg.In(size=(8,1), key='-L-',font = ("Serif", 13))],
            [sg.Checkbox('Lower lake height, H  [e.g. 10]',font = ("Serif", 13), default=False, key="-CheckH-")],
            [sg.In(size=(8,1), key='-H-',font = ("Serif", 13))],
@@ -29,13 +28,14 @@ file_list_column = [  [sg.Txt('Polubarinova-Kochina Solution',font = ("Serif", 2
            [sg.In(size=(8,1), key='-H1-',font = ("Serif", 13))],
            [sg.Checkbox('Specific discharge, Q  [e.g. 1]',font = ("Serif", 13), default=False, key="-CheckQ-")],
            [sg.In(size=(8,1), key='-Q-',font = ("Serif", 13))],
+           [sg.Checkbox('Seepage face height, H0  [e.g. 1]',font = ("Serif", 13), default=False, key="-CheckH0-")],
+           [sg.In(size=(8,1), key='-H0-',font = ("Serif", 13))],
            [sg.Checkbox('Hydraulic conductivity, K  [e.g. 2]',font = ("Serif", 13), default=False, key="-CheckK-")],
            [sg.In(size=(8,1), key='-K-',font = ("Serif", 13))],
-           [sg.Txt('Free surface resolution',font = ("Serif", 13))],
-           [sg.Radio('Low',"RADIO1",font = ("Serif", 13), default=True, key="-CheckLowRes-"),
+           [sg.Txt('Free surface resolution:',font = ("Serif", 13)),
+            sg.Radio('Low',"RADIO1",font = ("Serif", 13), default=True, key="-CheckLowRes-"),
             sg.Radio('High',"RADIO1",font = ("Serif", 13), default=False, key="-CheckHighRes-"),
             sg.Radio('Very high',"RADIO1",font = ("Serif", 13), default=False, key="-CheckVHRes-")],
-           [sg.In(size=(8,1), key='-N-',font = ("Serif", 13))],
            [sg.Txt(' ',font = ("Serif", 2))], 
            [sg.Button('Calculate', bind_return_key=True,font = ("Serif", 20))],
            [sg.Text("Output Folder  [e.g. /Users/admin/Desktop]",font = ("Serif", 13))],
@@ -77,25 +77,27 @@ while True:
     event, values = window.read()
 
     if event != sg.WIN_CLOSED:  
-        if values['-H-'] == '':
+        if values['-CheckH-'] == False:
             H = nan
         else: 
             H = float(values['-H-'])
-        if values['-H1-'] == '':
+        if values['-CheckH1-'] == False:
             H1 = nan
         else: 
             H1 = float(values['-H1-'])
-        if values['-L-'] == '':
+        if values['-CheckL-'] == False:
             L = nan
         else: 
             L = float(values['-L-'])
 
-        if values['-N-'] == '':
+        if values['-CheckLowRes-'] == True:
+            N = 100
+        elif values['-CheckHighRes-'] == True: 
             N = 1000
-        else: 
-            N = int(values['-N-'])
-        
-        if values['-U-'] == '':
+        else:
+            N = 5000
+            
+        if values['-U-'] == False:
             unit = 'Length-unit'
         else: 
             unit = str(values['-U-'])
@@ -105,12 +107,12 @@ while True:
         else: 
             Tunit = str(values['-U2-'])        
         
-        if values['-Q-'] == '':
+        if values['-CheckQ-'] == False:
             Q = nan
         else: 
             Q = float(values['-Q-'])
 
-        if values['-K-'] == '':
+        if values['-K-'] == False:
             K = nan
         else: 
             K = float(values['-K-'])
