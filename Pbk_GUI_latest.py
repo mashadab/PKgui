@@ -111,7 +111,7 @@ while True:
 
         if values['-K-'] == False:
             K = nan
-        else: 
+        else:
             K = float(values['-K-'])
         
         if values['-FOLDER-'] == '':

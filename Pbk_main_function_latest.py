@@ -47,7 +47,6 @@ def QbyK_func(alpha, beta,C):
 def QbyK_res_func(QbyK,alpha, beta,C):
  return QbyK - C*sqrt(alpha)*quad(lambda phi: (ellipk(1 - alpha * sin(phi)**2)*sin(phi))/sqrt((1 - alpha* sin(phi)**2)*(beta - alpha* sin(phi)**2)), 0, pi/2)[0]
 
-
 def H1_func(H,alpha, beta,C):
  return H + H0_func(alpha, beta,C) + C*quad(lambda phi: (ellipk(cos(phi)**2)*sin(phi))/sqrt((1 - alpha* sin(phi)**2)*(1 - beta* sin(phi)**2)), 0, pi/2)[0]
 
@@ -55,6 +54,7 @@ def H_func(alpha, beta,C):
  return C*sqrt(alpha)*quad(lambda phi: (ellipk(alpha * sin(phi)**2)*sin(phi))/sqrt((1 - alpha* sin(phi)**2)*(beta - alpha* sin(phi)**2)), 0, pi/2)[0]
 
 
+'''
 def PbK_solution(H_full,L_full,H1,n,output_folder,unit):
     
     H = H_full/H1
@@ -155,7 +155,7 @@ def PbK_solution(H_full,L_full,H1,n,output_folder,unit):
         savetxt(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/free-surface-profiles_XandZ.csv", xz_array, delimiter=",")
     
     return H0, res.x, xz_array
-
+'''
 
 
 def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
