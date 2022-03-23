@@ -9,9 +9,12 @@ from scipy.special import ellipk
 from numpy import sin, cos, sqrt, array, pi, nan, isnan, inf, savetxt, linspace, isnan, concatenate, shape, any
 from scipy.optimize import fsolve,least_squares
 from matplotlib.pyplot import figure, xlabel, ylabel, plot, vlines, hlines, savefig, show, tight_layout
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from warnings import filterwarnings
 from matplotlib.pyplot import rcParams
-from os import mkdir
+from os import makedirs
+from os.path import exists
+from shutil import rmtree
 
 rcParams.update({'font.size': 22})
 rcParams.update({'font.family': 'Serif'})
@@ -114,9 +117,14 @@ def PbK_solution(H_full,L_full,H1,n,output_folder,unit):
     #fig.show()
     
     H0 = H0_func(res.x[0],res.x[1],res.x[2]) 
+    path = f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}"
+    if not exists(path):
+        makedirs(path)
+    else:
+        rmtree(path)           # Removes all the subdirectories!
+        makedirs(path) 
     
-    if not output_folder =='':
-        mkdir(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}")
+    if not output_folder =='/tmp':
         fig.savefig(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/free-surface-profile.pdf")
     
     fig = figure(figsize=(10,10), dpi=50)
@@ -134,15 +142,15 @@ def PbK_solution(H_full,L_full,H1,n,output_folder,unit):
     
     H0 = H0_func(res.x[0],res.x[1],res.x[2])
     
-    if not output_folder =='':
-        fig.savefig(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/free-surface-profile.png")
+
+    fig.savefig(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/free-surface-profile.png")
 
     names = ['Unit','Dam length L', 'Lower lake level H', 'Upper lake level H1', 'Seepage face height H0', 'alpha', 'beta', 'C' ]
     scores = [unit, L_full, H_full, H1,  H0*H1, res.x[0],res.x[1],res.x[2] ]
     
     xz_array = xz_array[~isnan(xz_array).any(axis=1),:]
     
-    if not output_folder =='':
+    if not output_folder =='/tmp':
         savetxt(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/details.csv", [p for p in zip(names, scores)], delimiter=',', fmt='%s')
         savetxt(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/free-surface-profiles_XandZ.csv", xz_array, delimiter=",")
     
@@ -265,8 +273,15 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
 
     H0 = H_scale*H0_func(res.x[0],res.x[1],res.x[2]) 
     H1 = H_scale*H1_func(H,res.x[0],res.x[1],res.x[2])
-    if not output_folder =='':
-        mkdir(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}")
+
+    path = f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}"
+    if not exists(path):
+        makedirs(path)
+    else:
+        rmtree(path)           # Removes all the subdirectories!
+        makedirs(path) 
+    
+    if not output_folder =='/tmp':
         fig.savefig(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/free-surface-profile.pdf")
     
     fig = figure(figsize=(10,10), dpi=50)
@@ -281,17 +296,18 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
     ax.set_ylabel(f'z [{unit}]')
     tight_layout(pad=1, w_pad=0.8, h_pad=1)
     #fig.show()
-    if not output_folder =='':
-        fig.savefig(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/free-surface-profile.png")
+
+    fig.savefig(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/free-surface-profile.png")
 
     names = ['Length Unit','Time Unit','Dam length L', 'Lower lake level H', 'Upper lake level H1', 'Seepage face height H0', 'Specific discharge Q', 'Hydraulic conductivity K' , 'alpha', 'beta', 'C' ]
     scores= [unit, Tunit, L_full, H_full, H1,  H0, Q, K, res.x[0],res.x[1],res.x[2] ]
     
     xz_array = xz_array[~isnan(xz_array).any(axis=1),:] 
  
-    if not output_folder =='':
+    if not output_folder =='/tmp':
         savetxt(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/details.csv", [p for p in zip(names, scores)], delimiter=',', fmt='%s')
         savetxt(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/free-surface-profiles_XandZ.csv", xz_array, delimiter=",")
 
     
     return H0, H_full, L_full, res.x, xz_array,Q,K, H_scale*H1_func(H,res.x[0],res.x[1],res.x[2])
+
