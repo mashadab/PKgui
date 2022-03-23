@@ -18,7 +18,8 @@ file_list_column = [  [sg.Txt('Polubarinova-Kochina Solution',font = ("Serif", 2
            [sg.Txt('',font = ("Serif", 2))],
            [sg.Txt('Notes: - All units must be consistent.',font = ("Serif", 15))],
            [sg.Txt('            - For low-aspect ratio dams.',font = ("Serif", 15))],
-           [sg.Txt('            - Fill checkboxes and enter exactly 4 variables.',font = ("Serif", 15))],
+           [sg.Txt('            - Check 3 variables when not picking Q & K.',font = ("Serif", 15))],
+           [sg.Txt('            - Check 4 variables when picking Q or K or both.',font = ("Serif", 15))],
            [sg.Txt('_________________________________________________________',font = ("Serif", 18))],
            [sg.Txt('Input variables ',font = ("Serif", 18,'bold','italic'))],
            [sg.Txt('Units:   Length [e.g. m]',font = ("Serif", 15)), 
@@ -109,7 +110,7 @@ while True:
         else: 
             Q = float(values['-Q-'])
 
-        if values['-K-'] == False:
+        if values['-CheckK-'] == False:
             K = nan
         else:
             K = float(values['-K-'])

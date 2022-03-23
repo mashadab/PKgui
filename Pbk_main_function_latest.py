@@ -6,7 +6,7 @@ Pbk main functionsolution
 
 from scipy.integrate import quad
 from scipy.special import ellipk
-from numpy import sin, cos, sqrt, array, pi, nan, isnan, inf, savetxt, linspace, isnan, concatenate, shape, any
+from numpy import sin, cos, sqrt, array, pi, nan, isnan, inf, savetxt, linspace, isnan, concatenate, shape, any, argsort
 from scipy.optimize import fsolve,least_squares
 from matplotlib.pyplot import figure, xlabel, ylabel, plot, vlines, hlines, savefig, show, tight_layout
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -53,7 +53,6 @@ def H1_func(H,alpha, beta,C):
 def H_func(alpha, beta,C):
  return C*sqrt(alpha)*quad(lambda phi: (ellipk(alpha * sin(phi)**2)*sin(phi))/sqrt((1 - alpha* sin(phi)**2)*(beta - alpha* sin(phi)**2)), 0, pi/2)[0]
 
-
 '''
 def PbK_solution(H_full,L_full,H1,n,output_folder,unit):
     
@@ -85,11 +84,11 @@ def PbK_solution(H_full,L_full,H1,n,output_folder,unit):
     print("Free surface profiles")
     print("======================")
     print(f"Psi \t x {unit} \t z {unit}")
-    Psi_array = linspace(0,10,n+1)
+    Psi_array = linspace(0,1.57,n+1)
     x_array = []
     z_array = []
     xz_array = []
-    for i in range(0,n):
+    for i in range(0,n+1):
         x  = x_func(L,res.x[0], res.x[1],res.x[2],Psi_array[i])
         z  = z_func(H,res.x[0], res.x[1],res.x[2],Psi_array[i]) 
         if x==0: z = 1
@@ -100,6 +99,7 @@ def PbK_solution(H_full,L_full,H1,n,output_folder,unit):
             print(Psi_array[i],'\t',H1*x,'\t','\t','\t','\t', H1*z)
     x_array  = array(x_array)
     xz_array = array(xz_array)
+    
     xz_array[x_array<0,:] = nan
     xz_array[x_array>L,:] = nan
     xz_array = H1*xz_array
@@ -110,7 +110,7 @@ def PbK_solution(H_full,L_full,H1,n,output_folder,unit):
     ax.vlines(H1*L,0,H1*H+H1*H0_func(res.x[0],res.x[1],res.x[2]),colors='blue')  
     ax.vlines(H1*L,0,H1*H,colors='blue') 
     ax.hlines(H1*H,H1*L,H1*1.1*L,colors='blue')   
-    ax.hlines(0,0,H1*1.1*L,colors='blue')   
+    ax.hlines(0,0,H1*1.1*L,colors='blue')
     ax.set_xlabel(f'x [{unit}]')
     ax.set_ylabel(f'z [{unit}]')
     tight_layout(pad=1, w_pad=0.8, h_pad=1)
@@ -258,6 +258,14 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
     xz_array[x_array<0,:] = nan
     xz_array[x_array>L,:] = nan
     xz_array = H_scale*xz_array
+    xz_array = xz_array[~isnan(xz_array).any(axis=1),:] 
+    
+    p = argsort(xz_array[:,0])
+    
+    xz_array = xz_array[p,:]
+    
+    
+    
     fig = figure(figsize=(6,6) , dpi=100)
     ax = fig.add_subplot(111)
     ax.plot(xz_array[:,0],xz_array[:,1],'b-')
@@ -300,14 +308,13 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
     fig.savefig(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/free-surface-profile.png")
 
     names = ['Length Unit','Time Unit','Dam length L', 'Lower lake level H', 'Upper lake level H1', 'Seepage face height H0', 'Specific discharge Q', 'Hydraulic conductivity K' , 'alpha', 'beta', 'C' ]
-    scores= [unit, Tunit, L_full, H_full, H1,  H0, Q, K, res.x[0],res.x[1],res.x[2] ]
-    
-    xz_array = xz_array[~isnan(xz_array).any(axis=1),:] 
- 
+    scores= [unit, Tunit, L_full, H_full, H1,  H0, Q, K, res.x[0],res.x[1],res.x[2]]
+
     if not output_folder =='/tmp':
         savetxt(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/details.csv", [p for p in zip(names, scores)], delimiter=',', fmt='%s')
         savetxt(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/free-surface-profiles_XandZ.csv", xz_array, delimiter=",")
 
-    
-    return H0, H_full, L_full, res.x, xz_array,Q,K, H_scale*H1_func(H,res.x[0],res.x[1],res.x[2])
+    res.x[2] = res.x[2]*H_scale
+
+    return H0, H_full, L_full, res.x, xz_array,Q,K, H_scale*H1_func(H,res.x[0],res.x[1],res.x[2]/H_scale)
 
