@@ -52,8 +52,6 @@ file_list_column = [  [sg.Txt('Polubarinova-Kochina Solution',font = ("Serif", 2
 #for now will only show the name of the chosen file
 image_viewer_column = [
            [sg.Txt('Output details',font = ("Serif", 18,'bold','italic'))],
-           [sg.Text("Location:",font = ("Serif", 15)),
-            sg.Text(size=(50,1), key="-TOUT-",font = ("Serif", 15))],
            [sg.Txt('   L :',font = ("Serif", 15)), sg.Txt(size=(20,1), key='-OUTPUT5-') ,
             sg.Txt('    Q :',font = ("Serif", 15)), sg.Txt(size=(20,1), key='-OUTPUT6-')],           
            [sg.Txt('  H :',font = ("Serif", 15)), sg.Txt(size=(20,1), key='-OUTPUT4-') ,
@@ -178,16 +176,13 @@ while True:
             print('L/H1 ratio is',L/H1_input)
 
         if L/H1_input>3.5:# or (H1_input**2-H**2)/L**2<0.1:
-            filename = f"Error: The aspect ratio is high!"
-            window['-OUTPUT10-'].update(filename,font = ("Serif", 15),text_color='Red')
+            filename = f"\t Error: The aspect ratio is high!"
+            window['-OUTPUT10-'].update(filename,font = ("Serif", 20),text_color='Red')
             
         else:
             filename = f"{output_folder}/L{L}{unit}_H{H}{unit}_H1_{H1}{unit}_N{N}/free-surface-profile.png"
             window["-IMAGE-"].update(filename=filename)
-            
-            if not output_folder =='/tmp':
-                filename = f"{output_folder}/L{L}{unit}_H{H}{unit}_H1_{H1}{unit}_N{N}"
-                window["-TOUT-"].update(filename,font = ("Serif", 15))
+
         
     else:
         break
