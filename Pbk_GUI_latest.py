@@ -64,7 +64,7 @@ image_viewer_column = [
             sg.Txt('Alpha :',font = ("Serif", 15)),sg.Txt(size=(20,1), key='-OUTPUT1-')  ],
            [sg.Txt('Beta :',font = ("Serif", 15)),sg.Txt(size=(20,1), key='-OUTPUT2-') ,
             sg.Txt('   C :',font = ("Serif", 15)),sg.Txt(size=(20,1), key='-OUTPUT3-')  ],
-             [sg.Txt('',font = ("Serif", 15)),sg.Txt(size=(40,1), key='-OUTPUT10-')],
+             [sg.Txt('',font = ("Serif", 20)),sg.Txt(size=(40,1), key='-OUTPUT10-')],
            [sg.Txt(' ',font = ("Serif", 2))],
             [sg.Image(size=(550,490),key="-IMAGE-")], 
 ]
@@ -178,8 +178,8 @@ while True:
             print('L/H1 ratio is',L/H1_input)
 
         if L/H1_input>3.5:# or (H1_input**2-H**2)/L**2<0.1:
-            filename = f"Error: The aspect ratio is low!"
-            window['-OUTPUT10-'].update(filename,font = ("Serif", 15))
+            filename = f"Error: The aspect ratio is high!"
+            window['-OUTPUT10-'].update(filename,font = ("Serif", 15),text_color='Red')
             
         else:
             filename = f"{output_folder}/L{L}{unit}_H{H}{unit}_H1_{H1}{unit}_N{N}/free-surface-profile.png"
