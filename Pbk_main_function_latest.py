@@ -167,8 +167,9 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
         def full_equations(p):
             alpha, beta, C = p
             return (L_res_func(L,alpha, beta,C), H_res_func(H,alpha, beta,C),H1_res_func(H,alpha, beta,C))
+        a = max(H,L)
         
-        res = least_squares(full_equations, (0.0001, 0.1,1), bounds = ((0, 0,0), (1,1,10)))
+        res = least_squares(full_equations, (0.0001, 0.1,0.1*a), bounds = ((0, 0,0), (1,1,inf)),ftol=1e-12)
         
         print("======================")
         print("Given values")
@@ -307,8 +308,11 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
 
     fig.savefig(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/free-surface-profile.png")
 
-    names = ['Length Unit','Time Unit','Dam length L', 'Lower lake level H', 'Upper lake level H1', 'Seepage face height H0', 'Specific discharge Q', 'Hydraulic conductivity K' , 'alpha', 'beta', 'C' ]
-    scores= [unit, Tunit, L_full, H_full, H1,  H0, Q, K, res.x[0],res.x[1],res.x[2]]
+    QbyK = QbyK_func(res.x[0],res.x[1],res.x[2]) 
+
+    names = ['Length Unit','Time Unit','Dam length L', 'Lower lake level H', 'Upper lake level H1', 'Seepage face height H0', 'Specific discharge Q', 'Hydraulic conductivity K' ,'QbyK', 'alpha', 'beta', 'C' ]
+    scores= [unit, Tunit, L_full, H_full, H1,  H0, Q, K,QbyK, res.x[0],res.x[1],res.x[2]*H_scale]
+
 
     if not output_folder =='/tmp':
         savetxt(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/details.csv", [p for p in zip(names, scores)], delimiter=',', fmt='%s')
@@ -316,5 +320,5 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
 
     res.x[2] = res.x[2]*H_scale
 
-    return H0, H_full, L_full, res.x, xz_array,Q,K, H_scale*H1_func(H,res.x[0],res.x[1],res.x[2]/H_scale)
+    return H0, H_full, L_full, res.x, xz_array,Q,K, H_scale*H1_func(H,res.x[0],res.x[1],res.x[2]/H_scale),QbyK
 

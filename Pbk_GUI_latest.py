@@ -53,12 +53,18 @@ image_viewer_column = [
            [sg.Txt('Output details',font = ("Serif", 18,'bold','italic'))],
            [sg.Text("Location:",font = ("Serif", 15)),
             sg.Text(size=(50,1), key="-TOUT-",font = ("Serif", 15))],
-           [sg.Txt('Seepage face height, H0 :',font = ("Serif", 15)), sg.Txt(size=(30,1), key='-OUTPUT-')  ],
-           [sg.Txt('Alpha :',font = ("Serif", 15)),sg.Txt(size=(30,1), key='-OUTPUT1-')  ],
-           [sg.Txt('Beta :',font = ("Serif", 15)),sg.Txt(size=(30,1), key='-OUTPUT2-')  ],
-           [sg.Txt('C :',font = ("Serif", 15)),sg.Txt(size=(30,1), key='-OUTPUT3-')  ],
+           [sg.Txt('   L :',font = ("Serif", 15)), sg.Txt(size=(20,1), key='-OUTPUT5-') ,
+            sg.Txt('    Q :',font = ("Serif", 15)), sg.Txt(size=(20,1), key='-OUTPUT6-')],           
+           [sg.Txt('  H :',font = ("Serif", 15)), sg.Txt(size=(20,1), key='-OUTPUT4-') ,
+            sg.Txt('  H0 :',font = ("Serif", 15)), sg.Txt(size=(20,1), key='-OUTPUT-')],
+           [sg.Txt('H1 :',font = ("Serif", 15)), sg.Txt(size=(20,1), key='-OUTPUT7-') ,
+            sg.Txt('    K :',font = ("Serif", 15)), sg.Txt(size=(20,1), key='-OUTPUT8-')],
+           [sg.Txt('Q/K:',font = ("Serif", 15)),sg.Txt(size=(20,1), key='-OUTPUT9-') ,
+            sg.Txt('Alpha :',font = ("Serif", 15)),sg.Txt(size=(20,1), key='-OUTPUT1-')  ],
+           [sg.Txt('Beta :',font = ("Serif", 15)),sg.Txt(size=(20,1), key='-OUTPUT2-') ,
+            sg.Txt('   C :',font = ("Serif", 15)),sg.Txt(size=(20,1), key='-OUTPUT3-')  ],
            [sg.Txt(' ',font = ("Serif", 2))],
-            [sg.Image(size=(600,490),key="-IMAGE-")]
+            [sg.Image(size=(550,490),key="-IMAGE-")]
 ]
 
 layout = [
@@ -104,7 +110,7 @@ while True:
             Tunit = 'Time-unit'
         else: 
             Tunit = str(values['-U2-'])        
-        
+
         if values['-CheckQ-'] == False:
             Q = nan
         else: 
@@ -121,11 +127,18 @@ while True:
             output_folder = str(values['-FOLDER-'])
         
 
-        H0, H, L, res, xz_array,Q,K, H1 = PbK_solution_full(nan,H,L,H1,N,output_folder,Q,K,unit,Tunit)
-        calc = H0
+        H0, H, L, res, xz_array,Q,K, H1,QbyK = PbK_solution_full(nan,H,L,H1,N,output_folder,Q,K,unit,Tunit)
+        calc = f'{H0} [{unit}]'
         calc1 = res[0]
         calc2 = res[1]        
-        calc3 = res[2]
+        calc3 = f'{res[2]} [{unit}]'
+        calc4 = f'{H} [{unit}]'
+        calc5 = f'{L} [{unit}]'
+        calc6 = f'{Q} [{unit}/{Tunit}]'       
+        calc7 = f'{H1} [{unit}]'
+        calc8 = f'{K} [{unit}/{Tunit}]'
+        calc9 = f'{QbyK}'
+        
         print('Worked')
         if isnan(H0) and isnan(H1) and isnan(res):
             print('Did not work')
@@ -133,17 +146,31 @@ while True:
             calc1 = 'Invalid Alpha'
             calc2 = 'Invalid Beta'
             calc3 = 'Invalid C'
+            calc4 = 'Invalid H'
+            calc5 = 'Invalid L'
+            calc6 = 'Invalid Q'
+            calc7 = 'Invalid H1'
+            calc8 = 'Invalid K'
+            calc9 = 'Invalid QbyK'
 
         window['-OUTPUT-'].update(calc,font = ("Serif", 15))
         window['-OUTPUT1-'].update(calc1,font = ("Serif", 15))
         window['-OUTPUT2-'].update(calc2,font = ("Serif", 15))
         window['-OUTPUT3-'].update(calc3,font = ("Serif", 15))
+        window['-OUTPUT4-'].update(calc4,font = ("Serif", 15))
+        window['-OUTPUT5-'].update(calc5,font = ("Serif", 15))
+        window['-OUTPUT6-'].update(calc6,font = ("Serif", 15))
+        window['-OUTPUT7-'].update(calc7,font = ("Serif", 15))
+        window['-OUTPUT8-'].update(calc8,font = ("Serif", 15))
+        window['-OUTPUT9-'].update(calc9,font = ("Serif", 15))
+
+        filename = f"{output_folder}/L{L}{unit}_H{H}{unit}_H1_{H1}{unit}_N{N}/free-surface-profile.png"
+        window["-IMAGE-"].update(filename=filename)
         
-        if not output_folder =='':
+        if not output_folder =='/tmp':
             filename = f"{output_folder}/L{L}{unit}_H{H}{unit}_H1_{H1}{unit}_N{N}"
             window["-TOUT-"].update(filename,font = ("Serif", 15))
-            filename = f"{output_folder}/L{L}{unit}_H{H}{unit}_H1_{H1}{unit}_N{N}/free-surface-profile.png"
-            window["-IMAGE-"].update(filename=filename)
+            
     else:
         break
 
