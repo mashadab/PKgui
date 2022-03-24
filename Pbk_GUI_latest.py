@@ -64,8 +64,9 @@ image_viewer_column = [
             sg.Txt('Alpha :',font = ("Serif", 15)),sg.Txt(size=(20,1), key='-OUTPUT1-')  ],
            [sg.Txt('Beta :',font = ("Serif", 15)),sg.Txt(size=(20,1), key='-OUTPUT2-') ,
             sg.Txt('   C :',font = ("Serif", 15)),sg.Txt(size=(20,1), key='-OUTPUT3-')  ],
+             [sg.Txt('',font = ("Serif", 15)),sg.Txt(size=(40,1), key='-OUTPUT10-')],
            [sg.Txt(' ',font = ("Serif", 2))],
-            [sg.Image(size=(550,490),key="-IMAGE-")]
+            [sg.Image(size=(550,490),key="-IMAGE-")], 
 ]
 
 layout = [
@@ -90,6 +91,7 @@ while True:
             H1 = nan
         else: 
             H1 = float(values['-H1-'])
+            H1_input = H1
         if values['-CheckL-'] == False:
             L = nan
         else: 
@@ -126,7 +128,10 @@ while True:
             output_folder = '/tmp'
         else: 
             output_folder = str(values['-FOLDER-'])
-        
+                  
+        window['-OUTPUT10-'].update('',font = ("Serif", 15)),sg.Txt(size=(0,1))
+        window["-IMAGE-"].update('',size=(550,490))
+
 
         H0, H, L, res, xz_array,Q,K, H1,QbyK = PbK_solution_full(nan,H,L,H1,N,output_folder,Q,K,unit,Tunit)
         calc = f'{H0} [{unit}]'
@@ -164,14 +169,26 @@ while True:
         window['-OUTPUT7-'].update(calc7,font = ("Serif", 15))
         window['-OUTPUT8-'].update(calc8,font = ("Serif", 15))
         window['-OUTPUT9-'].update(calc9,font = ("Serif", 15))
-
-        filename = f"{output_folder}/L{L}{unit}_H{H}{unit}_H1_{H1}{unit}_N{N}/free-surface-profile.png"
-        window["-IMAGE-"].update(filename=filename)
         
-        if not output_folder =='/tmp':
-            filename = f"{output_folder}/L{L}{unit}_H{H}{unit}_H1_{H1}{unit}_N{N}"
-            window["-TOUT-"].update(filename,font = ("Serif", 15))
+        try:
+            H1_input
+        except NameError:
+            H1_input = H1
             
+            print('L/H1 ratio is',L/H1_input)
+
+        if L/H1_input>3.5:# or (H1_input**2-H**2)/L**2<0.1:
+            filename = f"Error: The aspect ratio is low!"
+            window['-OUTPUT10-'].update(filename,font = ("Serif", 15))
+            
+        else:
+            filename = f"{output_folder}/L{L}{unit}_H{H}{unit}_H1_{H1}{unit}_N{N}/free-surface-profile.png"
+            window["-IMAGE-"].update(filename=filename)
+            
+            if not output_folder =='/tmp':
+                filename = f"{output_folder}/L{L}{unit}_H{H}{unit}_H1_{H1}{unit}_N{N}"
+                window["-TOUT-"].update(filename,font = ("Serif", 15))
+        
     else:
         break
 
