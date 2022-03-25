@@ -23,17 +23,17 @@ file_list_column = [  [sg.Txt('Polubarinova-Kochina Solution',font = ("Serif", 2
            [sg.Txt('_________________________________________________________',font = ("Serif", 18))],
            [sg.Txt('Input variables',font = ("Serif", 18,'bold','italic')),
             sg.Txt('(Check relevant boxes)',font = ("Serif", 16,'bold'))],
-           [sg.Txt('Units:   Length [e.g. m]',font = ("Serif", 15)), 
+           [sg.Txt('Units:   Length [ L ]',font = ("Serif", 15)), 
             sg.In(size=(4,1), key='-U-',font = ("Serif", 15)),
             sg.Txt(',',font = ("Serif", 20)),
-            sg.Txt('Time [e.g. day]',font = ("Serif", 15)),
+            sg.Txt('Time [ T ]',font = ("Serif", 15)),
             sg.In(size=(4,1), key='-U2-',font = ("Serif", 15))],
-           [sg.Checkbox('Dam length, L [e.g. 100]',font = ("Serif", 15), default=False, key="-CheckL-"), sg.Txt('                     ',font = ("Serif", 10)),sg.In(size=(8,1), key='-L-',font = ("Serif", 15))],
-           [sg.Checkbox('Lower lake height, H  [e.g. 10]',font = ("Serif", 15), default=False, key="-CheckH-"),sg.Txt('        ',font = ("Serif", 10)),sg.In(size=(8,1), key='-H-',font = ("Serif", 15))],
-           [sg.Checkbox('Upper lake height, H1  [e.g. 110]',font = ("Serif", 15), default=False, key="-CheckH1-"),sg.Txt(' ',font = ("Serif", 10)),sg.In(size=(8,1), key='-H1-',font = ("Serif", 15))],
-           [sg.Checkbox('Specific discharge, Q_H1  [L^2/T]',font = ("Serif", 15), default=False, key="-CheckQ-"),sg.Txt('         ',font = ("Serif", 10)),sg.In(size=(8,1), key='-Q-',font = ("Serif", 15))],
-           [sg.Checkbox('Seepage face height, H0  [e.g. 1]',font = ("Serif", 15), default=False, key="-CheckH0-"),sg.Txt(' ',font = ("Serif", 10)),sg.In(size=(8,1), key='-H0-',font = ("Serif", 15))],
-           [sg.Checkbox('Hydraulic conductivity, K  [L/T]',font = ("Serif", 15), default=False, key="-CheckK-"),sg.Txt('',font = ("Serif", 10)),sg.In(size=(8,1), key='-K-',font = ("Serif", 15))],
+           [sg.Checkbox('Dam length, L [ L ]',font = ("Serif", 15), default=False, key="-CheckL-"), sg.Txt('  \t                 ',font = ("Serif", 10)),sg.In(size=(8,1), key='-L-',font = ("Serif", 15))],
+           [sg.Checkbox('Lower lake height, H  [ L ]',font = ("Serif", 15), default=False, key="-CheckH-"),sg.Txt('                   ',font = ("Serif", 10)),sg.In(size=(8,1), key='-H-',font = ("Serif", 15))],
+           [sg.Checkbox('Upper lake height, H1  [ L ]',font = ("Serif", 15), default=False, key="-CheckH1-"),sg.Txt('                ',font = ("Serif", 10)),sg.In(size=(8,1), key='-H1-',font = ("Serif", 15))],
+           [sg.Checkbox('Flow rate by width, Q_H1 [ L^2/T ]',font = ("Serif", 15), default=False, key="-CheckQ-"),sg.Txt('',font = ("Serif", 10)),sg.In(size=(8,1), key='-Q-',font = ("Serif", 15))],
+           [sg.Checkbox('Seepage face height, H0  [ L ]',font = ("Serif", 15), default=False, key="-CheckH0-"),sg.Txt('         ',font = ("Serif", 10)),sg.In(size=(8,1), key='-H0-',font = ("Serif", 15))],
+           [sg.Checkbox('Hydraulic conductivity, K  [ L/T ]',font = ("Serif", 15), default=False, key="-CheckK-"),sg.Txt('    ',font = ("Serif", 10)),sg.In(size=(8,1), key='-K-',font = ("Serif", 15))],
            [sg.Txt('Free surface resolution:',font = ("Serif", 15)),
             sg.Radio('Low',"RADIO1",font = ("Serif", 15), default=True, key="-CheckLowRes-"),
             sg.Radio('High',"RADIO1",font = ("Serif", 15), default=False, key="-CheckHighRes-"),
@@ -59,10 +59,11 @@ image_viewer_column = [
            [sg.Txt('H1 :',font = ("Serif", 15)), sg.Txt(size=(20,1), key='-OUTPUT7-') ,
             sg.Txt('    K :',font = ("Serif", 15)), sg.Txt(size=(20,1), key='-OUTPUT8-')],
            [sg.Txt('Q/K:',font = ("Serif", 15)),sg.Txt(size=(20,1), key='-OUTPUT9-') ,
-            sg.Txt('Alpha :',font = ("Serif", 15)),sg.Txt(size=(20,1), key='-OUTPUT1-')  ],
-           [sg.Txt('Beta :',font = ("Serif", 15)),sg.Txt(size=(20,1), key='-OUTPUT2-') ,
-            sg.Txt('   C :',font = ("Serif", 15)),sg.Txt(size=(20,1), key='-OUTPUT3-')  ],
-             [sg.Txt('',font = ("Serif", 20)),sg.Txt(size=(50,1), key='-OUTPUT10-')],
+            sg.Txt('Q_H0/Q_H:',font = ("Serif", 15)),sg.Txt(size=(20,1), key='-OUTPUT11-')] ,
+            [sg.Txt('Alpha :',font = ("Serif", 15)),sg.Txt(size=(20,1), key='-OUTPUT1-') ,
+             sg.Txt('Beta :',font = ("Serif", 15)),sg.Txt(size=(20,1), key='-OUTPUT2-')] ,
+            [sg.Txt('   C :',font = ("Serif", 15)),sg.Txt(size=(20,1), key='-OUTPUT3-')],
+            [sg.Txt('',font = ("Serif", 20)),sg.Txt(size=(50,1), key='-OUTPUT10-')],
            [sg.Txt(' ',font = ("Serif", 2))],
             [sg.Image(size=(550,490),key="-IMAGE-")], 
 ]
@@ -131,7 +132,7 @@ while True:
         window["-IMAGE-"].update('',size=(550,490))
 
 
-        H0, H, L, res, xz_array,Q,K, H1,QbyK, output_folder_full = PbK_solution_full(nan,H,L,H1,N,output_folder,Q,K,unit,Tunit)
+        H0, H, L, res, xz_array,Q,K, H1,QbyK,QH0byQH, output_folder_full = PbK_solution_full(nan,H,L,H1,N,output_folder,Q,K,unit,Tunit)
         calc = f'{H0} [{unit}]'
         calc1 = res[0]
         calc2 = res[1]        
@@ -142,6 +143,7 @@ while True:
         calc7 = f'{H1} [{unit}]'
         calc8 = f'{K} [{unit}/{Tunit}]'
         calc9 = f'{QbyK}'
+        calc10= f'{QH0byQH}'
         
         print('Worked')
         if isnan(H0) and isnan(H1) and isnan(res):
@@ -156,17 +158,19 @@ while True:
             calc7 = 'Invalid H1'
             calc8 = 'Invalid K'
             calc9 = 'Invalid QbyK'
+            calc10= 'Invalid Q_H0/Q_H'
 
-        window['-OUTPUT-'].update(calc,font = ("Serif", 15))
-        window['-OUTPUT1-'].update(calc1,font = ("Serif", 15))
-        window['-OUTPUT2-'].update(calc2,font = ("Serif", 15))
-        window['-OUTPUT3-'].update(calc3,font = ("Serif", 15))
-        window['-OUTPUT4-'].update(calc4,font = ("Serif", 15))
-        window['-OUTPUT5-'].update(calc5,font = ("Serif", 15))
-        window['-OUTPUT6-'].update(calc6,font = ("Serif", 15))
-        window['-OUTPUT7-'].update(calc7,font = ("Serif", 15))
-        window['-OUTPUT8-'].update(calc8,font = ("Serif", 15))
-        window['-OUTPUT9-'].update(calc9,font = ("Serif", 15))
+        window['-OUTPUT-'].update(calc,font = ("Serif", 13))
+        window['-OUTPUT1-'].update(calc1,font = ("Serif", 13))
+        window['-OUTPUT2-'].update(calc2,font = ("Serif", 13))
+        window['-OUTPUT3-'].update(calc3,font = ("Serif", 13))
+        window['-OUTPUT4-'].update(calc4,font = ("Serif", 13))
+        window['-OUTPUT5-'].update(calc5,font = ("Serif", 13))
+        window['-OUTPUT6-'].update(calc6,font = ("Serif", 13))
+        window['-OUTPUT7-'].update(calc7,font = ("Serif", 13))
+        window['-OUTPUT8-'].update(calc8,font = ("Serif", 13))
+        window['-OUTPUT9-'].update(calc9,font = ("Serif", 13))
+        window['-OUTPUT11-'].update(calc10,font = ("Serif", 13))   
         
         try:
             H1_input
