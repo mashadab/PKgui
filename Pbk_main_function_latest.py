@@ -42,10 +42,10 @@ def x_res_func(L,alpha, beta,C,Psi,x):
     return x - L + C*quad(lambda phi: (ellipk(sin(phi)**2)*sin(phi))/sqrt((1 - alpha* sin(phi)**2)*(1 - beta* sin(phi)**2)), 0, Psi)[0]
 
 def QbyK_func(alpha, beta,C):
- return C*sqrt(alpha)*quad(lambda phi: (ellipk(1 - alpha * sin(phi)**2)*sin(phi))/sqrt((1 - alpha* sin(phi)**2)*(beta - alpha* sin(phi)**2)), 0, pi/2)[0]
+ return C*quad(lambda phi: (ellipk(sin(phi)**2)*sin(phi)*cos(phi))/sqrt((1 - (1-alpha)* sin(phi)**2)*(1 - (1-beta)* sin(phi)**2)), 0, pi/2)[0] + C*sqrt(alpha)*quad(lambda phi: (ellipk(1 - alpha * sin(phi)**2)*sin(phi))/sqrt((1 - alpha* sin(phi)**2)*(beta - alpha* sin(phi)**2)), 0, pi/2)[0]
 
 def QbyK_res_func(QbyK,alpha, beta,C):
- return QbyK - C*sqrt(alpha)*quad(lambda phi: (ellipk(1 - alpha * sin(phi)**2)*sin(phi))/sqrt((1 - alpha* sin(phi)**2)*(beta - alpha* sin(phi)**2)), 0, pi/2)[0]
+ return QbyK - C*quad(lambda phi: (ellipk(sin(phi)**2)*sin(phi)*cos(phi))/sqrt((1 - (1-alpha)* sin(phi)**2)*(1 - (1-beta)* sin(phi)**2)), 0, pi/2)[0] - C*sqrt(alpha)*quad(lambda phi: (ellipk(1 - alpha * sin(phi)**2)*sin(phi))/sqrt((1 - alpha* sin(phi)**2)*(beta - alpha* sin(phi)**2)), 0, pi/2)[0]
 
 def H1_func(H,alpha, beta,C):
  return H + H0_func(alpha, beta,C) + C*quad(lambda phi: (ellipk(cos(phi)**2)*sin(phi))/sqrt((1 - alpha* sin(phi)**2)*(1 - beta* sin(phi)**2)), 0, pi/2)[0]
@@ -53,109 +53,9 @@ def H1_func(H,alpha, beta,C):
 def H_func(alpha, beta,C):
  return C*sqrt(alpha)*quad(lambda phi: (ellipk(alpha * sin(phi)**2)*sin(phi))/sqrt((1 - alpha* sin(phi)**2)*(beta - alpha* sin(phi)**2)), 0, pi/2)[0]
 
-'''
-def PbK_solution(H_full,L_full,H1,n,output_folder,unit):
-    
-    H = H_full/H1
-    L = L_full/H1
-    
-    def full_equations(p):
-        alpha, beta, C = p
-        return (L_res_func(L,alpha, beta,C), H_res_func(H,alpha, beta,C),H1_res_func(H,alpha, beta,C))
-    
-    res = least_squares(full_equations, (0.0001, 0.1,1), bounds = ((0, 0,0), (1,1,10)))
-    
-    print("======================")
-    print("Given values")
-    print("======================")
-    print("1.) Lake level, H: \t", H1*H)
-    print("2.) Aquifer length, L: \t", H1*L)
-    print("======================")
-    print("Output values")
-    print("======================")
-    print("1.) Seepage face height, H0: \t", H1*H0_func(res.x[0],res.x[1],res.x[2])) 
-    print("2.) alpha: \t", res.x[0])
-    print("3.) beta: \t", res.x[1])
-    print("4.) C: \t \t", res.x[2] )
-    
+def QH0byQH_func(alpha, beta,C):
+ return quad(lambda phi: (ellipk(sin(phi)**2)*sin(phi)*cos(phi))/sqrt((1 - (1-alpha)* sin(phi)**2)*(1 - (1-beta)* sin(phi)**2)), 0, pi/2)[0] / sqrt(alpha)*quad(lambda phi: (ellipk(1 - alpha * sin(phi)**2)*sin(phi))/sqrt((1 - alpha* sin(phi)**2)*(beta - alpha* sin(phi)**2)), 0, pi/2)[0]
 
-    
-    print("======================")
-    print("Free surface profiles")
-    print("======================")
-    print(f"Psi \t x {unit} \t z {unit}")
-    Psi_array = linspace(0,1.57,n+1)
-    x_array = []
-    z_array = []
-    xz_array = []
-    for i in range(0,n+1):
-        x  = x_func(L,res.x[0], res.x[1],res.x[2],Psi_array[i])
-        z  = z_func(H,res.x[0], res.x[1],res.x[2],Psi_array[i]) 
-        if x==0: z = 1
-        if x==L: z = H + H0_func(res.x[0],res.x[1],res.x[2]) 
-        xz_array.append([x,z])
-        x_array.append(x)
-        if i%(int(n/20)) == 0 and x != inf and x!=-inf and x>=0:    
-            print(Psi_array[i],'\t',H1*x,'\t','\t','\t','\t', H1*z)
-    x_array  = array(x_array)
-    xz_array = array(xz_array)
-    
-    xz_array[x_array<0,:] = nan
-    xz_array[x_array>L,:] = nan
-    xz_array = H1*xz_array
-    fig = figure(figsize=(6,6) , dpi=100)
-    ax = fig.add_subplot(111)
-    ax.plot(H1*xz_array[:,0],H1*xz_array[:,1],'b-')
-    ax.vlines(0,0,H1,colors='blue') 
-    ax.vlines(H1*L,0,H1*H+H1*H0_func(res.x[0],res.x[1],res.x[2]),colors='blue')  
-    ax.vlines(H1*L,0,H1*H,colors='blue') 
-    ax.hlines(H1*H,H1*L,H1*1.1*L,colors='blue')   
-    ax.hlines(0,0,H1*1.1*L,colors='blue')
-    ax.set_xlabel(f'x [{unit}]')
-    ax.set_ylabel(f'z [{unit}]')
-    tight_layout(pad=1, w_pad=0.8, h_pad=1)
-    #fig.show()
-    
-    H0 = H0_func(res.x[0],res.x[1],res.x[2]) 
-    path = f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}"
-    if not exists(path):
-        makedirs(path)
-    else:
-        rmtree(path)           # Removes all the subdirectories!
-        makedirs(path) 
-    
-    if not output_folder =='/tmp':
-        fig.savefig(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/free-surface-profile.pdf")
-    
-    fig = figure(figsize=(10,10), dpi=50)
-    ax = fig.add_subplot(111)
-    ax.plot(xz_array[:,0],xz_array[:,1],'b-')
-    ax.vlines(0,0,H1,colors='blue') 
-    ax.vlines(H1*L,0,H1*H+H1*H0_func(res.x[0],res.x[1],res.x[2]),colors='blue')  
-    ax.vlines(H1*L,0,H1*H,colors='blue') 
-    ax.hlines(H1*H,H1*L,H1*1.1*L,colors='blue')   
-    ax.hlines(0,0,H1*1.1*L,colors='blue')   
-    ax.set_xlabel(f'x [{unit}]')
-    ax.set_ylabel(f'z [{unit}]')
-    tight_layout(pad=1, w_pad=0.8, h_pad=1)
-    #fig.show()
-    
-    H0 = H0_func(res.x[0],res.x[1],res.x[2])
-    
-
-    fig.savefig(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/free-surface-profile.png")
-
-    names = ['Unit','Dam length L', 'Lower lake level H', 'Upper lake level H1', 'Seepage face height H0', 'alpha', 'beta', 'C' ]
-    scores = [unit, L_full, H_full, H1,  H0*H1, res.x[0],res.x[1],res.x[2] ]
-    
-    xz_array = xz_array[~isnan(xz_array).any(axis=1),:]
-    
-    if not output_folder =='/tmp':
-        savetxt(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/details.csv", [p for p in zip(names, scores)], delimiter=',', fmt='%s')
-        savetxt(f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}/free-surface-profiles_XandZ.csv", xz_array, delimiter=",")
-    
-    return H0, res.x, xz_array
-'''
 
 
 def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
@@ -320,5 +220,7 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
 
     res.x[2] = res.x[2]*H_scale
 
-    return H0, H_full, L_full, res.x, xz_array,Q,K, H_scale*H1_func(H,res.x[0],res.x[1],res.x[2]/H_scale),QbyK
+    output_folder = f"{output_folder}/L{L_full}{unit}_H{H_full}{unit}_H1_{H1}{unit}_N{n}"
+
+    return H0, H_full, L_full, res.x, xz_array,Q,K, H_scale*H1_func(H,res.x[0],res.x[1],res.x[2]/H_scale),QbyK,output_folder
 

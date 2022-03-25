@@ -31,9 +31,9 @@ file_list_column = [  [sg.Txt('Polubarinova-Kochina Solution',font = ("Serif", 2
            [sg.Checkbox('Dam length, L [e.g. 100]',font = ("Serif", 15), default=False, key="-CheckL-"), sg.Txt('                     ',font = ("Serif", 10)),sg.In(size=(8,1), key='-L-',font = ("Serif", 15))],
            [sg.Checkbox('Lower lake height, H  [e.g. 10]',font = ("Serif", 15), default=False, key="-CheckH-"),sg.Txt('        ',font = ("Serif", 10)),sg.In(size=(8,1), key='-H-',font = ("Serif", 15))],
            [sg.Checkbox('Upper lake height, H1  [e.g. 110]',font = ("Serif", 15), default=False, key="-CheckH1-"),sg.Txt(' ',font = ("Serif", 10)),sg.In(size=(8,1), key='-H1-',font = ("Serif", 15))],
-           [sg.Checkbox('Specific discharge, Q  [e.g. 1]',font = ("Serif", 15), default=False, key="-CheckQ-"),sg.Txt('         ',font = ("Serif", 10)),sg.In(size=(8,1), key='-Q-',font = ("Serif", 15))],
+           [sg.Checkbox('Specific discharge, Q_H1  [L^2/T]',font = ("Serif", 15), default=False, key="-CheckQ-"),sg.Txt('         ',font = ("Serif", 10)),sg.In(size=(8,1), key='-Q-',font = ("Serif", 15))],
            [sg.Checkbox('Seepage face height, H0  [e.g. 1]',font = ("Serif", 15), default=False, key="-CheckH0-"),sg.Txt(' ',font = ("Serif", 10)),sg.In(size=(8,1), key='-H0-',font = ("Serif", 15))],
-           [sg.Checkbox('Hydraulic conductivity, K  [e.g. 2]',font = ("Serif", 15), default=False, key="-CheckK-"),sg.Txt('',font = ("Serif", 10)),sg.In(size=(8,1), key='-K-',font = ("Serif", 15))],
+           [sg.Checkbox('Hydraulic conductivity, K  [L/T]',font = ("Serif", 15), default=False, key="-CheckK-"),sg.Txt('',font = ("Serif", 10)),sg.In(size=(8,1), key='-K-',font = ("Serif", 15))],
            [sg.Txt('Free surface resolution:',font = ("Serif", 15)),
             sg.Radio('Low',"RADIO1",font = ("Serif", 15), default=True, key="-CheckLowRes-"),
             sg.Radio('High',"RADIO1",font = ("Serif", 15), default=False, key="-CheckHighRes-"),
@@ -62,7 +62,7 @@ image_viewer_column = [
             sg.Txt('Alpha :',font = ("Serif", 15)),sg.Txt(size=(20,1), key='-OUTPUT1-')  ],
            [sg.Txt('Beta :',font = ("Serif", 15)),sg.Txt(size=(20,1), key='-OUTPUT2-') ,
             sg.Txt('   C :',font = ("Serif", 15)),sg.Txt(size=(20,1), key='-OUTPUT3-')  ],
-             [sg.Txt('',font = ("Serif", 20)),sg.Txt(size=(40,1), key='-OUTPUT10-')],
+             [sg.Txt('',font = ("Serif", 20)),sg.Txt(size=(50,1), key='-OUTPUT10-')],
            [sg.Txt(' ',font = ("Serif", 2))],
             [sg.Image(size=(550,490),key="-IMAGE-")], 
 ]
@@ -127,18 +127,18 @@ while True:
         else: 
             output_folder = str(values['-FOLDER-'])
                   
-        window['-OUTPUT10-'].update('',font = ("Serif", 15)),sg.Txt(size=(0,1))
+        window['-OUTPUT10-'].update('',font = ("Serif", 15)),sg.Txt(size=(50,1))
         window["-IMAGE-"].update('',size=(550,490))
 
 
-        H0, H, L, res, xz_array,Q,K, H1,QbyK = PbK_solution_full(nan,H,L,H1,N,output_folder,Q,K,unit,Tunit)
+        H0, H, L, res, xz_array,Q,K, H1,QbyK, output_folder_full = PbK_solution_full(nan,H,L,H1,N,output_folder,Q,K,unit,Tunit)
         calc = f'{H0} [{unit}]'
         calc1 = res[0]
         calc2 = res[1]        
         calc3 = f'{res[2]} [{unit}]'
         calc4 = f'{H} [{unit}]'
         calc5 = f'{L} [{unit}]'
-        calc6 = f'{Q} [{unit}/{Tunit}]'       
+        calc6 = f'{Q} [{unit}^2/{Tunit}]'       
         calc7 = f'{H1} [{unit}]'
         calc8 = f'{K} [{unit}/{Tunit}]'
         calc9 = f'{QbyK}'
@@ -175,12 +175,15 @@ while True:
             
             print('L/H1 ratio is',L/H1_input)
 
-        if L/H1_input>3.5:# or (H1_input**2-H**2)/L**2<0.1:
-            filename = f"\t Error: The aspect ratio is high!"
+        if L/H1_input>=3.5 or (H1_input**2-H**2)/L**2<0.1:
+            filename = f"Error: The aspect ratio is high!"
             window['-OUTPUT10-'].update(filename,font = ("Serif", 20),text_color='Red')
             
         else:
-            filename = f"{output_folder}/L{L}{unit}_H{H}{unit}_H1_{H1}{unit}_N{N}/free-surface-profile.png"
+            if not N ==5000:
+                filename = f"Caution: Try higher resolution if free surface is disconnected!"
+                window['-OUTPUT10-'].update(filename,font = ("Serif", 15),text_color='Yellow')
+            filename = f"{output_folder_full}/free-surface-profile.png"
             window["-IMAGE-"].update(filename=filename)
 
         
