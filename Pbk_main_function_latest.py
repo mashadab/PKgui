@@ -29,7 +29,7 @@ def L_func(alpha, beta, C):
 def H_res_func(H,alpha, beta,C):
  return H - C*sqrt(alpha)*quad(lambda phi: (ellipk(alpha * sin(phi)**2)*sin(phi))/sqrt((1 - alpha* sin(phi)**2)*(beta - alpha* sin(phi)**2)), 0, pi/2)[0]
 
-def H_res_func(alpha, beta,C):
+def H_func(alpha, beta,C):
  return C*sqrt(alpha)*quad(lambda phi: (ellipk(alpha * sin(phi)**2)*sin(phi))/sqrt((1 - alpha* sin(phi)**2)*(beta - alpha* sin(phi)**2)), 0, pi/2)[0]
 
 
@@ -39,8 +39,8 @@ def H0_func(alpha, beta,C):
 def H0_res_func(H0,alpha, beta,C):
  return H0 - C*quad(lambda phi: (ellipk(cos(phi)**2)*sin(phi)*cos(phi))/sqrt((1 - (1-alpha)* sin(phi)**2)*(1 - (1-beta)* sin(phi)**2)), 0, pi/2)[0]
 
-def H1_res_func(H,alpha, beta,C):
- return 1 - H - H0_func(alpha, beta,C) - C*quad(lambda phi: (ellipk(cos(phi)**2)*sin(phi))/sqrt((1 - alpha* sin(phi)**2)*(1 - beta* sin(phi)**2)), 0, pi/2)[0]
+def H1_res_func(H1,H,alpha, beta,C):
+ return H1 - H - H0_func(alpha, beta,C) - C*quad(lambda phi: (ellipk(cos(phi)**2)*sin(phi))/sqrt((1 - alpha* sin(phi)**2)*(1 - beta* sin(phi)**2)), 0, pi/2)[0]
 
 def x_func(L,alpha, beta,C,Psi):
  return L - C*quad(lambda phi: (ellipk(sin(phi)**2)*sin(phi))/sqrt((1 - alpha* sin(phi)**2)*(1 - beta* sin(phi)**2)), 0, Psi)[0]
@@ -52,7 +52,8 @@ def x_res_func(L,alpha, beta,C,Psi,x):
     return x - L + C*quad(lambda phi: (ellipk(sin(phi)**2)*sin(phi))/sqrt((1 - alpha* sin(phi)**2)*(1 - beta* sin(phi)**2)), 0, Psi)[0]
 
 def QbyK_func(alpha, beta,C):
- return C*quad(lambda phi: (ellipk(sin(phi)**2)*sin(phi)*cos(phi))/sqrt((1 - (1-alpha)* sin(phi)**2)*(1 - (1-beta)* sin(phi)**2)), 0, pi/2)[0] + C*sqrt(alpha)*quad(lambda phi: (ellipk(1 - alpha * sin(phi)**2)*sin(phi))/sqrt((1 - alpha* sin(phi)**2)*(beta - alpha* sin(phi)**2)), 0, pi/2)[0]
+ return C*quad(lambda phi: (ellipk(sin(phi)**2)*sin(phi)*cos(phi))/sqrt((1 - (1-alpha)* sin(phi)**2)*(1 - (1-beta)* sin(phi)**2)), 0, pi/2)[0] + \
+        C*sqrt(alpha)*quad(lambda phi: (ellipk(1 - alpha * sin(phi)**2)*sin(phi))/sqrt((1 - alpha* sin(phi)**2)*(beta - alpha* sin(phi)**2)), 0, pi/2)[0]
 
 def QbyK_res_func(QbyK,alpha, beta,C):
  return QbyK - C*quad(lambda phi: (ellipk(sin(phi)**2)*sin(phi)*cos(phi))/sqrt((1 - (1-alpha)* sin(phi)**2)*(1 - (1-beta)* sin(phi)**2)), 0, pi/2)[0] - C*sqrt(alpha)*quad(lambda phi: (ellipk(1 - alpha * sin(phi)**2)*sin(phi))/sqrt((1 - alpha* sin(phi)**2)*(beta - alpha* sin(phi)**2)), 0, pi/2)[0]
@@ -77,10 +78,11 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
         H_scale = H1
         H = H_full/H_scale
         L = L_full/H_scale
+        H1= H1/H_scale
         
         def full_equations(p):
             alpha, beta, C = p
-            return (L_res_func(L,alpha, beta,C), H_res_func(H,alpha, beta,C),H1_res_func(H,alpha, beta,C))
+            return (L_res_func(L,alpha, beta,C), H_res_func(H,alpha, beta,C),H1_res_func(H1,H,alpha, beta,C))
         a = max(H,L)
         
         res = least_squares(full_equations, (0.0001, 0.1,0.1*a), bounds = ((0, 0,0), (1,1,inf)),ftol=1e-12)
@@ -150,9 +152,10 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
         H_scale = H1
         H = H_full/H_scale
         H0 = H0/H_scale
+        H1= H1/H_scale
         def full_equations(p):
             alpha, beta, C = p
-            return (H1_res_func(H,alpha, beta,C), H_res_func(H,alpha, beta,C),H0_res_func(H0,alpha, beta,C))
+            return (H1_res_func(H1,H,alpha, beta,C), H_res_func(H,alpha, beta,C),H0_res_func(H0,alpha, beta,C))
         a = max(H1,H0)
         
         res = least_squares(full_equations, (0.0001, 0.1,0.1*a), bounds = ((0, 0,0), (1,1,inf)),ftol=1e-12)
@@ -188,14 +191,15 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
         H_scale = H1
         L = L_full/H_scale
         H0 = H0/H_scale
+        H1= H1/H_scale
         def full_equations(p):
             alpha, beta, C = p
-            return (H1_res_func(H_res_func(alpha, beta,C),alpha, beta,C), L_res_func(L,alpha, beta,C),H0_res_func(H0,alpha, beta,C))
+            return (H1_res_func(H1,H_func(alpha, beta,C),alpha, beta,C), L_res_func(L,alpha, beta,C),H0_res_func(H0,alpha, beta,C))
         a = max(H1,L)
         
         res = least_squares(full_equations, (0.0001, 0.1,0.1*a), bounds = ((0, 0,0), (1,1,inf)),ftol=1e-12)
         
-        H   = H_res_func(res.x[0],res.x[1],res.x[2])  
+        H   = H_func(res.x[0],res.x[1],res.x[2])  
         H_full = H_scale * H
         
         print("======================")
@@ -224,7 +228,7 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
             
 
 
-    elif ~isnan(H_full) and isnan(H1) and isnan(H0) and ~isnan(Q/K) and ~isnan(L):
+    elif ~isnan(H_full) and isnan(H1) and isnan(H0) and ~isnan(L_full) and ~isnan(Q/K):
         H_scale = L_full
         H = H_full/H_scale
         L = L_full/H_scale
@@ -244,18 +248,18 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
         print("4.) C: \t \t", res.x[2] )  
         print("5.) Higher lake level, H1: \t", H_scale*H1_func(H,res.x[0],res.x[1],res.x[2]),f"{unit}")   
         
-    elif isnan(H_full) and ~isnan(H1) and isnan(H0):        
-        H_scale = H1
-        H1 = H1/H_scale
+        #error in this one
+    elif isnan(H_full) and isnan(H1) and ~isnan(H0) and ~isnan(L_full) and ~isnan(Q/K):        
+        H_scale = L_full
         L = L_full/H_scale
-        
+        H0 = H0/H_scale
         def full_equations(p):
             alpha, beta, C = p
-            return (L_res_func(L,alpha, beta,C), H1_res_func(H_func(alpha, beta,C),alpha, beta,C),QbyK_res_func(Q/(K*H_scale),alpha, beta,C))
+            return (L_res_func(L,alpha, beta,C), H0_res_func(H0,alpha, beta,C),QbyK_res_func(Q/(K*H_scale),alpha, beta,C))
         
         res = least_squares(full_equations, (0.0001, 0.1,1), bounds = ((0, 0,0), (1,1,10)))
         H   = H_func(res.x[0],res.x[1],res.x[2])
-        H_full= H_func(res.x[0],res.x[1],res.x[2])
+        H_full= H_func(res.x[0],res.x[1],res.x[2])*H_scale
         
         print("======================")
         print("Output values")
@@ -267,6 +271,57 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
         print("5.) Lower lake level, H: \t", H_scale*H_func(res.x[0],res.x[1],res.x[2]),f"{unit}")   
     
         
+    #close result
+    elif isnan(H_full) and ~isnan(H1) and isnan(H0) and ~isnan(L_full) and ~isnan(Q/K):        
+        H_scale = H1
+        H1 = H1/H_scale
+        L = L_full/H_scale
+        
+        def full_equations(p):
+            alpha, beta, C = p
+            return (L_res_func(L,alpha, beta,C), H1_res_func(H1,H0_func(alpha, beta,C),alpha, beta,C),QbyK_res_func(Q/(K*H_scale),alpha, beta,C))
+        
+        res = least_squares(full_equations, (0.0001, 0.1,1), bounds = ((0, 0,0), (1,1,10)))
+        H   = H_func(res.x[0],res.x[1],res.x[2])
+        H_full= H_func(res.x[0],res.x[1],res.x[2])*H_scale
+        
+        print("======================")
+        print("Output values")
+        print("======================")
+        print("1.) Seepage face height, H0: \t", H_scale*H0_func(res.x[0],res.x[1],res.x[2])) 
+        print("2.) alpha: \t", res.x[0])
+        print("3.) beta: \t", res.x[1])
+        print("4.) C: \t \t", res.x[2] )  
+        print("5.) Lower lake level, H: \t", H_scale*H_func(res.x[0],res.x[1],res.x[2]),f"{unit}")   
+    
+    
+    #not close
+    elif isnan(H_full) and ~isnan(H1) and ~isnan(H0) and isnan(L_full) and ~isnan(Q/K):        
+        H_scale = H1
+        H1 = H1/H_scale
+        H0 = H0/H_scale
+        
+        def full_equations(p):
+            alpha, beta, C = p
+            return (H0_res_func(H0,alpha, beta,C), H1_res_func(H1,H_func(alpha, beta,C),alpha, beta,C),QbyK_res_func(Q/(K*H_scale),alpha, beta,C))
+        
+        res = least_squares(full_equations, (0.0001, 0.1,1), bounds = ((0, 0,0), (1,1,10)))
+        H   = H_func(res.x[0],res.x[1],res.x[2])
+        H_full= H_func(res.x[0],res.x[1],res.x[2])*H_scale
+        L   = L_func(res.x[0],res.x[1],res.x[2])
+        L_full = L_func(res.x[0],res.x[1],res.x[2])*H_scale
+        
+        
+        print("======================")
+        print("Output values")
+        print("======================")
+        print("1.) Seepage face height, H0: \t", H_scale*H0_func(res.x[0],res.x[1],res.x[2])) 
+        print("2.) alpha: \t", res.x[0])
+        print("3.) beta: \t", res.x[1])
+        print("4.) C: \t \t", res.x[2] )  
+        print("5.) Lower lake level, H: \t", H_scale*H_func(res.x[0],res.x[1],res.x[2]),f"{unit}")   
+    
+                
     
     
     print(f"6.) Specific discharge over hydraulic conductivity, q/K {unit}: \t \t", H_scale*QbyK_func(res.x[0], res.x[1],res.x[2]))          

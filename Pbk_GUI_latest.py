@@ -108,13 +108,13 @@ while True:
         else:
             N = 5000
             
-        if values['-U-'] == False:
-            unit = 'Length-unit'
+        if values['-U-'] == '':
+            unit = 'L'
         else: 
             unit = str(values['-U-'])
 
         if values['-U2-'] == '':
-            Tunit = 'Time-unit'
+            Tunit = 'T'
         else: 
             Tunit = str(values['-U2-'])        
 
