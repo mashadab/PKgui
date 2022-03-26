@@ -14,13 +14,15 @@ sg.theme('Dark Green 7')
 file_list_column = [  [sg.Txt('Polubarinova-Kochina Solution',font = ("Serif", 28,"bold"))],
            [sg.Txt('  ',font = ("Serif", 10))],
            [sg.Txt('Developed by:',font = ("Serif", 15,'bold')),sg.Txt('M.A. Shadab*, E. Hiatt & M.A. Hesse',font = ("Serif", 15))],
-           [sg.Txt('The University of Texas at Austin    \ ',font = ("Serif", 15,'italic')),sg.Txt('* mashadab@utexas.edu',font = ("Serif", 15))],
-           [sg.Txt('',font = ("Serif", 2))],
-           [sg.Txt('Notes: - All units must be consistent.',font = ("Serif", 15))],
+           [sg.Txt('\t           The University of Texas at Austin',font = ("Serif", 15,'italic'))],
+           [sg.Txt('\t           * Email: mashadab@utexas.edu',font = ("Serif", 15))],
+           [sg.Txt('',font = ("Serif", 5))],
+           [sg.Txt('Notes: - All units must be consistent. Fill only numbers.',font = ("Serif", 15))],
            [sg.Txt('            - For low-aspect ratio dams.',font = ("Serif", 15))],
            [sg.Txt('            - Fill 3 variables when not picking Q & K.',font = ("Serif", 15))],
            [sg.Txt('            - Fill 4 variables when picking Q or K or both.',font = ("Serif", 15))],
            [sg.Txt('_________________________________________________________',font = ("Serif", 18))],
+           [sg.Txt('',font = ("Serif", 5))],
            [sg.Txt('Input variables',font = ("Serif", 18,'bold','italic')),
             sg.Txt('(Check relevant boxes)',font = ("Serif", 16,'bold'))],
            [sg.Txt('Units:   Length [ L ]',font = ("Serif", 15)), 
@@ -142,17 +144,17 @@ while True:
             buzzer = 0
             
         H0, H, L, res, xz_array,Q,K, H1,QH0byQH,QbyK, output_folder_full = PbK_solution_full(H0,H,L,H1,N,output_folder,Q,K,unit,Tunit)
-        calc = f'{H0} [{unit}]'
-        calc1 = res[0]
-        calc2 = res[1]        
-        calc3 = f'{res[2]} [{unit}]'
-        calc4 = f'{H} [{unit}]'
-        calc5 = f'{L} [{unit}]'
-        calc6 = f'{Q} [{unit}^2/{Tunit}]'       
-        calc7 = f'{H1} [{unit}]'
-        calc8 = f'{K} [{unit}/{Tunit}]'
-        calc9 = f'{QbyK} [{unit}]'
-        calc10= f'{QH0byQH}'
+        calc = f'{H0:.7f} [{unit}]'
+        calc1 = f'{res[0]:.7f}'
+        calc2 = f'{res[1]:.7f}'        
+        calc3 = f'{res[2]:.7f} [{unit}]'
+        calc4 = f'{H:.7f} [{unit}]'
+        calc5 = f'{L:.7f} [{unit}]'
+        calc6 = f'{Q:.7f} [{unit}^2/{Tunit}]'       
+        calc7 = f'{H1:.7f} [{unit}]'
+        calc8 = f'{K:.7f} [{unit}/{Tunit}]'
+        calc9 = f'{QbyK:.7f} [{unit}]'
+        calc10= f'{QH0byQH:.7f}'
         
         print('Worked')
         if isnan(H0) and isnan(H1) and isnan(res):
@@ -169,17 +171,17 @@ while True:
             calc9 = 'Invalid QbyK'
             calc10= 'Invalid Q_H0/Q_H'
 
-        window['-OUTPUT-'].update(calc,font = ("Serif", 13))
-        window['-OUTPUT1-'].update(calc1,font = ("Serif", 13))
-        window['-OUTPUT2-'].update(calc2,font = ("Serif", 13))
-        window['-OUTPUT3-'].update(calc3,font = ("Serif", 13))
-        window['-OUTPUT4-'].update(calc4,font = ("Serif", 13))
-        window['-OUTPUT5-'].update(calc5,font = ("Serif", 13))
-        window['-OUTPUT6-'].update(calc6,font = ("Serif", 13))
-        window['-OUTPUT7-'].update(calc7,font = ("Serif", 13))
-        window['-OUTPUT8-'].update(calc8,font = ("Serif", 13))
-        window['-OUTPUT9-'].update(calc9,font = ("Serif", 13))
-        window['-OUTPUT11-'].update(calc10,font = ("Serif", 13))   
+        window['-OUTPUT-'].update(calc,font = ("Serif", 15))
+        window['-OUTPUT1-'].update(calc1,font = ("Serif", 15))
+        window['-OUTPUT2-'].update(calc2,font = ("Serif", 15))
+        window['-OUTPUT3-'].update(calc3,font = ("Serif", 15))
+        window['-OUTPUT4-'].update(calc4,font = ("Serif", 15))
+        window['-OUTPUT5-'].update(calc5,font = ("Serif", 15))
+        window['-OUTPUT6-'].update(calc6,font = ("Serif", 15))
+        window['-OUTPUT7-'].update(calc7,font = ("Serif", 15))
+        window['-OUTPUT8-'].update(calc8,font = ("Serif", 15))
+        window['-OUTPUT9-'].update(calc9,font = ("Serif", 15))
+        window['-OUTPUT11-'].update(calc10,font = ("Serif", 15))   
         
         try:
             H1_input
@@ -192,6 +194,7 @@ while True:
         
             if res[0]<1e-3 and res[1]>1-1e-3:
                 if not N ==5000:
+                    '''
                     filename = f"Error: The aspect ratio is high!"
                     window['-OUTPUT10-'].update(filename,font = ("Serif", 20),text_color='Red')
                     '''  
@@ -199,7 +202,7 @@ while True:
                     window['-OUTPUT10-'].update(filename,font = ("Serif", 15),text_color='Yellow')
                 filename = f"{output_folder_full}/free-surface-profile.png"
                 window["-IMAGE-"].update(filename=filename)
-                '''
+
             else:
                 filename = f"Error: The aspect ratio is high!"
                 window['-OUTPUT10-'].update(filename,font = ("Serif", 20),text_color='Red')

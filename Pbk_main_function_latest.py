@@ -399,20 +399,20 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
     
     if res.x[0]<1e-3 and res.x[1]>1-1e-3:
         
-        def z_func_high_aspect_ratio_res(Psi): #Psi is m in PbK book
-            return H0_func(res.x[0],res.x[1],res.x[2]) - z_func_high_aspect_ratio(H0_func(res.x[0],res.x[1],res.x[2]),res.x[2],Psi)
+        def x_func_high_aspect_ratio_res(Psi): #Psi is m in PbK book
+         return  L -0.5*res.x[2]*quad(lambda m: (ellipk(m))/(1-m), 0, Psi)[0]
+        
         print(L,res.x[2])
-        Psi_max = least_squares(z_func_high_aspect_ratio_res, (1e-5), bounds = (-inf,inf))
-        print('Psi max is',Psi_max.x,z_func_high_aspect_ratio_res(Psi_max.x))
+        Psi_max = least_squares(x_func_high_aspect_ratio_res, (1e-5), bounds = (-inf,inf))
+        print('Psi max is',Psi_max.x,x_func_high_aspect_ratio_res(Psi_max.x))
 
-        def z_func_high_aspect_ratio_res(Psi): #Psi is m in PbK book
-            return H1 - z_func_high_aspect_ratio(H0_func(res.x[0],res.x[1],res.x[2]),res.x[2],Psi)
+        def x_func_high_aspect_ratio_res(Psi): #Psi is m in PbK book
+         return  0.5*res.x[2]*quad(lambda m: (ellipk(m))/(1-m), 0, Psi)[0]
+
+        Psi_min = least_squares(x_func_high_aspect_ratio_res, (1e-5), bounds = (-inf,inf))
+        print('Psi min is',Psi_min.x,x_func_high_aspect_ratio_res(Psi_min.x))
         
-        Psi_min = least_squares(z_func_high_aspect_ratio_res, (1000), bounds = (-inf,inf))
-        print('Psi min is',Psi_min.x,z_func_high_aspect_ratio_res(Psi_min.x))
-        
-        
-        Psi_array = linspace(Psi_min.x,Psi_max.x,n+1)
+        Psi_array = linspace(Psi_min.x,10,n+1)
     x_array = []
     z_array = []
     xz_array = []       
