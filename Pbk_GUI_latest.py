@@ -136,8 +136,12 @@ while True:
         window['-OUTPUT10-'].update('',font = ("Serif", 15)),sg.Txt(size=(50,1))
         window["-IMAGE-"].update('',size=(550,490))
 
-
-        H0, H, L, res, xz_array,Q,K, H1,QbyK,QH0byQH, output_folder_full = PbK_solution_full(H0,H,L,H1,N,output_folder,Q,K,unit,Tunit)
+        if (isnan(H) and ~isnan(H1) and isnan(H0) and ~isnan(L) and ~isnan(Q/K)) or (~isnan(H) and isnan(H1) and ~isnan(H0) and isnan(L) and ~isnan(Q/K)):
+            buzzer = 1
+        else: 
+            buzzer = 0
+            
+        H0, H, L, res, xz_array,Q,K, H1,QH0byQH,QbyK, output_folder_full = PbK_solution_full(H0,H,L,H1,N,output_folder,Q,K,unit,Tunit)
         calc = f'{H0} [{unit}]'
         calc1 = res[0]
         calc2 = res[1]        
@@ -147,7 +151,7 @@ while True:
         calc6 = f'{Q} [{unit}^2/{Tunit}]'       
         calc7 = f'{H1} [{unit}]'
         calc8 = f'{K} [{unit}/{Tunit}]'
-        calc9 = f'{QbyK}'
+        calc9 = f'{QbyK} [{unit}]'
         calc10= f'{QH0byQH}'
         
         print('Worked')
@@ -204,9 +208,15 @@ while True:
             if not N ==5000:
                 filename = f"Caution: Try higher resolution if free surface is disconnected!"
                 window['-OUTPUT10-'].update(filename,font = ("Serif", 15),text_color='Yellow')
+               
+
+            if buzzer==1:
+                print('Hello there')
+                filename = f"Caution: Accuracy may be low! Pick other variables."
+                window['-OUTPUT10-'].update(filename,font = ("Serif", 15),text_color='Yellow')                
+                
             filename = f"{output_folder_full}/free-surface-profile.png"
             window["-IMAGE-"].update(filename=filename)
-
         
     else:
         break
