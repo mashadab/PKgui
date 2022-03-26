@@ -29,6 +29,10 @@ def L_func(alpha, beta, C):
 def H_res_func(H,alpha, beta,C):
  return H - C*sqrt(alpha)*quad(lambda phi: (ellipk(alpha * sin(phi)**2)*sin(phi))/sqrt((1 - alpha* sin(phi)**2)*(beta - alpha* sin(phi)**2)), 0, pi/2)[0]
 
+def H_res_func(alpha, beta,C):
+ return C*sqrt(alpha)*quad(lambda phi: (ellipk(alpha * sin(phi)**2)*sin(phi))/sqrt((1 - alpha* sin(phi)**2)*(beta - alpha* sin(phi)**2)), 0, pi/2)[0]
+
+
 def H0_func(alpha, beta,C):
  return C*quad(lambda phi: (ellipk(cos(phi)**2)*sin(phi)*cos(phi))/sqrt((1 - (1-alpha)* sin(phi)**2)*(1 - (1-beta)* sin(phi)**2)), 0, pi/2)[0]
 
@@ -182,16 +186,17 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
  
     elif isnan(H_full) and ~isnan(H1) and ~isnan(H0) and ~isnan(L_full):
         H_scale = H1
-        H = H_full/H_scale
         L = L_full/H_scale
         H0 = H0/H_scale
         def full_equations(p):
             alpha, beta, C = p
-            return (H1_res_func(H,alpha, beta,C), L_res_func(L,alpha, beta,C),H0_res_func(H0,alpha, beta,C))
+            return (H1_res_func(H_res_func(alpha, beta,C),alpha, beta,C), L_res_func(L,alpha, beta,C),H0_res_func(H0,alpha, beta,C))
         a = max(H1,L)
         
         res = least_squares(full_equations, (0.0001, 0.1,0.1*a), bounds = ((0, 0,0), (1,1,inf)),ftol=1e-12)
         
+        H   = H_res_func(res.x[0],res.x[1],res.x[2])  
+        H_full = H_scale * H
         
         print("======================")
         print("Given values")
