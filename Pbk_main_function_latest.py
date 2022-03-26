@@ -179,10 +179,48 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
         elif isnan(Q) and isnan(K): 
             QbyK = H_scale*QbyK_func(res.x[0],res.x[1],res.x[2])     
             print("5.) Neither K or Q given") 
+ 
+    elif isnan(H_full) and ~isnan(H1) and ~isnan(H0) and ~isnan(L_full):
+        H_scale = H1
+        H = H_full/H_scale
+        L = L_full/H_scale
+        H0 = H0/H_scale
+        def full_equations(p):
+            alpha, beta, C = p
+            return (H1_res_func(H,alpha, beta,C), L_res_func(L,alpha, beta,C),H0_res_func(H0,alpha, beta,C))
+        a = max(H1,L)
+        
+        res = least_squares(full_equations, (0.0001, 0.1,0.1*a), bounds = ((0, 0,0), (1,1,inf)),ftol=1e-12)
+        
+        
+        print("======================")
+        print("Given values")
+        print("======================")
+        print("1.) Lake level, H: \t", H_scale*H, f"{unit}")
+        print("2.) Aquifer length, L: \t", H_scale*L, f"{unit}")
+        print("======================")
+        print("Output values")
+        print("======================")
+        print("1.) Seepage face height, H0: \t", H_scale*H0_func(res.x[0],res.x[1],res.x[2]), f"{unit}") 
+        print("2.) alpha: \t", res.x[0])
+        print("3.) beta: \t", res.x[1])
+        print("4.) C: \t \t", res.x[2] )      
+        if isnan(Q) and ~isnan(K): 
+            Q = K*H_scale*QbyK_func(res.x[0],res.x[1],res.x[2]) 
+            QbyK = H_scale*QbyK_func(res.x[0],res.x[1],res.x[2]) 
+            print("5.) Specific discharge, Q: \t \t", Q, f'{unit}^2/{Tunit}') 
+        elif ~isnan(Q) and isnan(K): 
+            K = Q/(H_scale*QbyK_func(res.x[0],res.x[1],res.x[2])) 
+            QbyK = H_scale*QbyK_func(res.x[0],res.x[1],res.x[2])
+            print("5.) Hydraulic conductivity, K: \t \t", K ,f'{unit}/{Tunit}') 
+        elif isnan(Q) and isnan(K): 
+            QbyK = H_scale*QbyK_func(res.x[0],res.x[1],res.x[2])     
+            print("5.) Neither K or Q given") 
             
 
-    elif ~isnan(H_full) and isnan(H1) and isnan(H0):
-        H_scale = H_full
+
+    elif ~isnan(H_full) and isnan(H1) and isnan(H0) and ~isnan(Q/K) and ~isnan(L):
+        H_scale = L_full
         H = H_full/H_scale
         L = L_full/H_scale
         
