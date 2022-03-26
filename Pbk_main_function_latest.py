@@ -158,7 +158,7 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
             return (H1_res_func(H1,H,alpha, beta,C), H_res_func(H,alpha, beta,C),H0_res_func(H0,alpha, beta,C))
         a = max(H1,H0)
         
-        res = least_squares(full_equations, (0.0001, 0.1,0.1*a), bounds = ((0, 0,0), (1,1,inf)),ftol=1e-12)
+        res = least_squares(full_equations, (0.0001, 0.1,a), bounds = ((0, 0,0), (1,1,inf)),ftol=1e-12)
         
         L = L_func(res.x[0],res.x[1],res.x[2]) 
         L_full = L*H_scale
