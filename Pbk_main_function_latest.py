@@ -412,12 +412,20 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
         Psi_min = least_squares(x_func_high_aspect_ratio_res, (1e-5), bounds = (-inf,inf))
         print('Psi min is',Psi_min.x,x_func_high_aspect_ratio_res(Psi_min.x))
         
-        Psi_array = linspace(Psi_min.x,10,n+1)
+        Psi_array = linspace(0,1,n)
     x_array = []
     z_array = []
     xz_array = []       
+    x_newarray = linspace(0,L,n+1)
     for i in range(0,n):
         if res.x[0]<1e-3 and res.x[1]>1-1e-3:
+            '''
+            x = x_newarray[i]
+            def x_func_high_aspect_ratio_res(Psi): #Psi is m in PbK book
+                 return  x - L + 0.5*res.x[2]*quad(lambda m: (ellipk(m))/(1-m), 0, Psi)[0]           
+            m = least_squares(x_func_high_aspect_ratio_res, (1e-5), bounds = (-inf,inf),jac = '2-point')      
+            Psi_array[i] = m.x
+            '''
             x  = x_func_high_aspect_ratio(L,res.x[2],Psi_array[i])
             z  = z_func_high_aspect_ratio(H0_func(res.x[0],res.x[1],res.x[2]),res.x[2],Psi_array[i])         
         else:

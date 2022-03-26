@@ -8,7 +8,7 @@ import PySimpleGUI as sg
 from Pbk_main_function_latest import *
 
 sg.theme('Dark Green 7')
-
+#sg.change_look_and_feel('DarkAmber') 
 
 #window layout of two columns
 file_list_column = [  [sg.Txt('Polubarinova-Kochina Solution',font = ("Serif", 28,"bold"))],
@@ -41,7 +41,7 @@ file_list_column = [  [sg.Txt('Polubarinova-Kochina Solution',font = ("Serif", 2
             sg.Radio('High',"RADIO1",font = ("Serif", 15), default=False, key="-CheckHighRes-"),
             sg.Radio('Very high',"RADIO1",font = ("Serif", 15), default=False, key="-CheckVHRes-")],
            [sg.Txt(' ',font = ("Serif", 2))], 
-           [sg.Button('\t   Calculate \t \t ', bind_return_key=True,font = ("Serif", 20,'bold','italic'))],
+           [sg.Button('\t        Calculate \t          ', bind_return_key=True,font = ("Serif", 20,'bold','italic'))],
            [sg.Text("Output Folder  [e.g. /Users/admin/Desktop]",font = ("Serif", 15))],
            [
             sg.In(size=(24,1), key="-FOLDER-",font = ("Serif", 15)),
@@ -199,7 +199,7 @@ while True:
                     window['-OUTPUT10-'].update(filename,font = ("Serif", 20),text_color='Red')
                     '''  
                     filename = f"Caution: Limiting case!"  
-                    window['-OUTPUT10-'].update(filename,font = ("Serif", 15),text_color='Yellow')
+                    window['-OUTPUT10-'].update(filename,font = ("Serif", 15),text_color='Red')
                 filename = f"{output_folder_full}/free-surface-profile.png"
                 window["-IMAGE-"].update(filename=filename)
 
@@ -210,13 +210,13 @@ while True:
         else:
             if not N ==5000:
                 filename = f"Caution: Try higher resolution if free surface is disconnected!"
-                window['-OUTPUT10-'].update(filename,font = ("Serif", 15),text_color='Yellow')
+                window['-OUTPUT10-'].update(filename,font = ("Serif", 15),text_color='Red')
                
 
             if buzzer==1:
                 print('Hello there')
                 filename = f"Caution: Accuracy may be low! Pick other variables."
-                window['-OUTPUT10-'].update(filename,font = ("Serif", 15),text_color='Yellow')                
+                window['-OUTPUT10-'].update(filename,font = ("Serif", 15),text_color='Red')                
                 
             filename = f"{output_folder_full}/free-surface-profile.png"
             window["-IMAGE-"].update(filename=filename)
