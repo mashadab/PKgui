@@ -29,6 +29,9 @@ def H_res_func(H,alpha, beta,C):
 def H0_func(alpha, beta,C):
  return C*quad(lambda phi: (ellipk(cos(phi)**2)*sin(phi)*cos(phi))/sqrt((1 - (1-alpha)* sin(phi)**2)*(1 - (1-beta)* sin(phi)**2)), 0, pi/2)[0]
 
+def H0_res_func(H0,alpha, beta,C):
+ return H0 - C*quad(lambda phi: (ellipk(cos(phi)**2)*sin(phi)*cos(phi))/sqrt((1 - (1-alpha)* sin(phi)**2)*(1 - (1-beta)* sin(phi)**2)), 0, pi/2)[0]
+
 def H1_res_func(H,alpha, beta,C):
  return 1 - H - H0_func(alpha, beta,C) - C*quad(lambda phi: (ellipk(cos(phi)**2)*sin(phi))/sqrt((1 - alpha* sin(phi)**2)*(1 - beta* sin(phi)**2)), 0, pi/2)[0]
 
@@ -56,10 +59,14 @@ def H_func(alpha, beta,C):
 def QH0byQH_func(alpha, beta):
  return quad(lambda phi: (ellipk(sin(phi)**2)*sin(phi)*cos(phi))/sqrt((1 - (1-alpha)* sin(phi)**2)*(1 - (1-beta)* sin(phi)**2)), 0, pi/2)[0] / (sqrt(alpha)*quad(lambda phi: (ellipk(1 - alpha * sin(phi)**2)*sin(phi))/sqrt((1 - alpha* sin(phi)**2)*(beta - alpha* sin(phi)**2)), 0, pi/2)[0])
 
+def x_func_high_aspect_ratio(L,C,Psi): #Psi is m in PbK book
+ return  L -0.5*C*quad(lambda m: (ellipk(m))/(1-m), 0, Psi)[0]
 
+def z_func_high_aspect_ratio(H0,C,Psi): #Psi is m in PbK book
+ return H0+0.5*C*quad(lambda m: (ellipk(1-m))/(1-m), 0, Psi)[0]
 
 def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
-    if ~isnan(H_full) and ~isnan(H1) and isnan(H0):
+    if ~isnan(H_full) and ~isnan(H1) and isnan(H0) and ~isnan(L_full):
         H_scale = H1
         H = H_full/H_scale
         L = L_full/H_scale
@@ -95,6 +102,43 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
             QbyK = H_scale*QbyK_func(res.x[0],res.x[1],res.x[2])     
             print("5.) Neither K or Q given") 
 
+    elif ~isnan(H_full) and isnan(H1) and ~isnan(H0) and ~isnan(L_full):
+        H_scale = L_full
+        H = H_full/H_scale
+        L = L_full/H_scale
+        H0 = H0/H_scale
+        def full_equations(p):
+            alpha, beta, C = p
+            return (L_res_func(L,alpha, beta,C), H_res_func(H,alpha, beta,C),H0_res_func(H0,alpha, beta,C))
+        a = max(H,L)
+        
+        res = least_squares(full_equations, (0.0001, 0.1,0.1*a), bounds = ((0, 0,0), (1,1,inf)),ftol=1e-12)
+        
+        print("======================")
+        print("Given values")
+        print("======================")
+        print("1.) Lake level, H: \t", H_scale*H, f"{unit}")
+        print("2.) Aquifer length, L: \t", H_scale*L, f"{unit}")
+        print("======================")
+        print("Output values")
+        print("======================")
+        print("1.) Seepage face height, H0: \t", H_scale*H0_func(res.x[0],res.x[1],res.x[2]), f"{unit}") 
+        print("2.) alpha: \t", res.x[0])
+        print("3.) beta: \t", res.x[1])
+        print("4.) C: \t \t", res.x[2] )      
+        if isnan(Q) and ~isnan(K): 
+            Q = K*H_scale*QbyK_func(res.x[0],res.x[1],res.x[2]) 
+            QbyK = H_scale*QbyK_func(res.x[0],res.x[1],res.x[2]) 
+            print("5.) Specific discharge, Q: \t \t", Q, f'{unit}^2/{Tunit}') 
+        elif ~isnan(Q) and isnan(K): 
+            K = Q/(H_scale*QbyK_func(res.x[0],res.x[1],res.x[2])) 
+            QbyK = H_scale*QbyK_func(res.x[0],res.x[1],res.x[2])
+            print("5.) Hydraulic conductivity, K: \t \t", K ,f'{unit}/{Tunit}') 
+        elif isnan(Q) and isnan(K): 
+            QbyK = H_scale*QbyK_func(res.x[0],res.x[1],res.x[2])     
+            print("5.) Neither K or Q given") 
+
+
     elif ~isnan(H_full) and isnan(H1) and isnan(H0):
         H_scale = H_full
         H = H_full/H_scale
@@ -127,6 +171,7 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
         res = least_squares(full_equations, (0.0001, 0.1,1), bounds = ((0, 0,0), (1,1,10)))
         H   = H_func(res.x[0],res.x[1],res.x[2])
         H_full= H_func(res.x[0],res.x[1],res.x[2])
+        
         print("======================")
         print("Output values")
         print("======================")
@@ -135,19 +180,46 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
         print("3.) beta: \t", res.x[1])
         print("4.) C: \t \t", res.x[2] )  
         print("5.) Lower lake level, H: \t", H_scale*H_func(res.x[0],res.x[1],res.x[2]),f"{unit}")   
+    
         
+    
+    
     print(f"6.) Specific discharge over hydraulic conductivity, q/K {unit}: \t \t", H_scale*QbyK_func(res.x[0], res.x[1],res.x[2]))          
     print("======================")
     print("Free surface profiles")
     print("======================")
     print(f"Psi \t x {unit} \t z {unit}")
+    
+    
+    
     Psi_array = linspace(0,10,n+1)
+    
+    if res.x[0]<1e-3 and res.x[1]>1-1e-3:
+        
+        def z_func_high_aspect_ratio_res(Psi): #Psi is m in PbK book
+            return H0_func(res.x[0],res.x[1],res.x[2]) - z_func_high_aspect_ratio(H0_func(res.x[0],res.x[1],res.x[2]),res.x[2],Psi)
+        print(L,res.x[2])
+        Psi_max = least_squares(z_func_high_aspect_ratio_res, (1e-5), bounds = (-inf,inf))
+        print('Psi max is',Psi_max.x,z_func_high_aspect_ratio_res(Psi_max.x))
+
+        def z_func_high_aspect_ratio_res(Psi): #Psi is m in PbK book
+            return H1 - z_func_high_aspect_ratio(H0_func(res.x[0],res.x[1],res.x[2]),res.x[2],Psi)
+        
+        Psi_min = least_squares(z_func_high_aspect_ratio_res, (1000), bounds = (-inf,inf))
+        print('Psi min is',Psi_min.x,z_func_high_aspect_ratio_res(Psi_min.x))
+        
+        
+        Psi_array = linspace(Psi_min.x,Psi_max.x,n+1)
     x_array = []
     z_array = []
-    xz_array = []
+    xz_array = []       
     for i in range(0,n):
-        x  = x_func(L,res.x[0], res.x[1],res.x[2],Psi_array[i])
-        z  = z_func(H,res.x[0], res.x[1],res.x[2],Psi_array[i]) 
+        if res.x[0]<1e-3 and res.x[1]>1-1e-3:
+            x  = x_func_high_aspect_ratio(L,res.x[2],Psi_array[i])
+            z  = z_func_high_aspect_ratio(H0_func(res.x[0],res.x[1],res.x[2]),res.x[2],Psi_array[i])         
+        else:
+            x  = x_func(L,res.x[0], res.x[1],res.x[2],Psi_array[i])
+            z  = z_func(H,res.x[0], res.x[1],res.x[2],Psi_array[i]) 
         if x==0: z = H1_func(H,res.x[0],res.x[1],res.x[2])
         if x==L: z = H + H0_func(res.x[0],res.x[1],res.x[2]) 
         xz_array.append([x,z])

@@ -91,6 +91,11 @@ while True:
         else: 
             H1 = float(values['-H1-'])
             H1_input = H1
+        if values['-CheckH0-'] == False:
+            H0 = nan
+        else: 
+            H0 = float(values['-H0-'])
+            H0_input = H0
         if values['-CheckL-'] == False:
             L = nan
         else: 
@@ -132,7 +137,7 @@ while True:
         window["-IMAGE-"].update('',size=(550,490))
 
 
-        H0, H, L, res, xz_array,Q,K, H1,QbyK,QH0byQH, output_folder_full = PbK_solution_full(nan,H,L,H1,N,output_folder,Q,K,unit,Tunit)
+        H0, H, L, res, xz_array,Q,K, H1,QbyK,QH0byQH, output_folder_full = PbK_solution_full(H0,H,L,H1,N,output_folder,Q,K,unit,Tunit)
         calc = f'{H0} [{unit}]'
         calc1 = res[0]
         calc2 = res[1]        
@@ -180,8 +185,20 @@ while True:
             print('L/H1 ratio is',L/H1_input)
 
         if L/H1_input>=3.5 or (H1_input**2-H**2)/L**2<0.1:
-            filename = f"Error: The aspect ratio is high!"
-            window['-OUTPUT10-'].update(filename,font = ("Serif", 20),text_color='Red')
+        
+            if res[0]<1e-3 and res[1]>1-1e-3:
+                if not N ==5000:
+                    filename = f"Error: The aspect ratio is high!"
+                    window['-OUTPUT10-'].update(filename,font = ("Serif", 20),text_color='Red')
+                    '''  
+                    filename = f"Caution: Limiting case!"  
+                    window['-OUTPUT10-'].update(filename,font = ("Serif", 15),text_color='Yellow')
+                filename = f"{output_folder_full}/free-surface-profile.png"
+                window["-IMAGE-"].update(filename=filename)
+                '''
+            else:
+                filename = f"Error: The aspect ratio is high!"
+                window['-OUTPUT10-'].update(filename,font = ("Serif", 20),text_color='Red')
             
         else:
             if not N ==5000:
