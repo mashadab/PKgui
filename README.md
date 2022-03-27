@@ -19,7 +19,7 @@ Alpha: Pbk parameter [-],   Beta:  Pbk parameter [-],   z: Free surface height [
 
 ### Relevant file paths
 - [Standalone executable GUI](https://drive.google.com/drive/u/0/folders/184aby8uWy1ZTMGidqhQwq9rfznjocVY1)
-- [Python with GUI](https://github.com/mashadab/Polubarinova-Kochina-solutions/blob/main/Pbk_GUI.py)
+- [Python with GUI](https://github.com/mashadab/Polubarinova-Kochina-solutions/blob/main/Pbk_GUI_latest.py)
 
 ## Quick Usage
 ### Executable GUI (Windows and Mac)
