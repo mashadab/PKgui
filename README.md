@@ -14,7 +14,7 @@ This codes solves the Polubarina-Kochina equations for low aspect ratio dam prob
 
 ### Variables [Dimension] (refer to paper [1])
 
-L: Length of dam [L],   H: Lower lake height [L],   H1: Upper lake height [L],   H0: Seepage face height [L],   C: Pbk parameter [L], \
+L: Length of dam [L],   H: Lower lake height [L],   H1: Upper lake height [L],   H0: Seepage face height [L],   C: Pbk parameter [L], 
 Alpha: Pbk parameter [-],   Beta:  Pbk parameter [-],   z: Free surface height [L],   x: horizontal dimension [L],   Q: Total flow rate by width in third dimension [L^2/T], Q_H0/Q_H: Ratio of flow rate from seepage face vs from lake [-]
 
 ### Relevant file paths
