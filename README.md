@@ -14,8 +14,8 @@ This codes solves the Polubarina-Kochina equations for low aspect ratio dam prob
 
 ### Variables [Dimension] (refer to paper [1])
 
-L: Length of dam [L],   H: Lower lake height [L],   H1: Upper lake height [L],   H0: Seepage face height [L],   C: Pbk parameter [-], \
-Alpha: Pbk parameter [-],   Beta:  Pbk parameter [-],   z: Free surface height [L],   x: horizontal dimension [L]
+L: Length of dam [L],   H: Lower lake height [L],   H1: Upper lake height [L],   H0: Seepage face height [L],   C: Pbk parameter [L], \
+Alpha: Pbk parameter [-],   Beta:  Pbk parameter [-],   z: Free surface height [L],   x: horizontal dimension [L],   Q: Total flow rate by width in third dimension [L^2/T], Q_H0/Q_H: Ratio of flow rate from seepage face vs from lake [-]
 
 ### Relevant file paths
 - [Standalone executable GUI](https://drive.google.com/drive/u/0/folders/184aby8uWy1ZTMGidqhQwq9rfznjocVY1)
@@ -81,3 +81,4 @@ The output files include:
 
 ## References / Related publications
 [1] Hornung, U. and Krueger, T., 1985. Evaluation of the Polubarinova‐Kochina formula for the dam problem. Water Resources Research, 21(3), pp.395-398.
+[2] Polubarinova-Koch, P.I., 2015. Theory of ground water movement. Princeton university press.
