@@ -448,15 +448,13 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
     
     xz_array = xz_array[p,:]
     
-    
-    
     fig = figure(figsize=(6,6) , dpi=100)
     ax = fig.add_subplot(111)
     ax.plot(xz_array[:,0],xz_array[:,1],'b-')
-    ax.vlines(0,0,H_scale*H1_func(H,res.x[0],res.x[1],res.x[2]),colors='blue') 
-    ax.vlines(H_scale*L,0,H_scale*H+H_scale*H0_func(res.x[0],res.x[1],res.x[2]),colors='blue')  
-    ax.vlines(H_scale*L,0,H_scale*H,colors='blue') 
-    ax.hlines(H_scale*H,H_scale*L,H_scale*1.1*L,colors='blue')   
+    ax.vlines(0,0,H_scale*H1_func(H_func(res.x[0],res.x[1],res.x[2]),res.x[0],res.x[1],res.x[2]),colors='blue') 
+    ax.vlines(H_scale*L,0,H_scale*H_func(res.x[0],res.x[1],res.x[2])+H_scale*H0_func(res.x[0],res.x[1],res.x[2]),colors='blue')  
+    ax.vlines(H_scale*L,0,H_scale*H_func(res.x[0],res.x[1],res.x[2]),colors='blue') 
+    ax.hlines(H_scale*H_func(res.x[0],res.x[1],res.x[2]),H_scale*L,H_scale*1.1*L,colors='blue')   
     ax.hlines(0,0,H_scale*1.1*L,colors='blue')   
     ax.set_xlabel(f'x [{unit}]')
     ax.set_ylabel(f'z [{unit}]')
@@ -479,10 +477,10 @@ def PbK_solution_full(H0,H_full,L_full,H1,n,output_folder,Q,K,unit,Tunit):
     fig = figure(figsize=(10,10), dpi=50)
     ax = fig.add_subplot(111)
     ax.plot(xz_array[:,0],xz_array[:,1],'b-')
-    ax.vlines(0,0,H_scale,colors='blue') 
-    ax.vlines(H_scale*L,0,H_scale*H+H_scale*H0_func(res.x[0],res.x[1],res.x[2]),colors='blue')  
-    ax.vlines(H_scale*L,0,H_scale*H,colors='blue') 
-    ax.hlines(H_scale*H,H_scale*L,H_scale*1.1*L,colors='blue')   
+    ax.vlines(0,0,H_scale*H1_func(H_func(res.x[0],res.x[1],res.x[2]),res.x[0],res.x[1],res.x[2]),colors='blue') 
+    ax.vlines(H_scale*L,0,H_scale*H_func(res.x[0],res.x[1],res.x[2])+H_scale*H0_func(res.x[0],res.x[1],res.x[2]),colors='blue')  
+    ax.vlines(H_scale*L,0,H_scale*H_func(res.x[0],res.x[1],res.x[2]),colors='blue') 
+    ax.hlines(H_scale*H_func(res.x[0],res.x[1],res.x[2]),H_scale*L,H_scale*1.1*L,colors='blue')   
     ax.hlines(0,0,H_scale*1.1*L,colors='blue')   
     ax.set_xlabel(f'x [{unit}]')
     ax.set_ylabel(f'z [{unit}]')

@@ -106,9 +106,9 @@ while True:
         if values['-CheckLowRes-'] == True:
             N = 100
         elif values['-CheckHighRes-'] == True: 
-            N = 1000
+            N = 2000
         else:
-            N = 5000
+            N = 50000
             
         if values['-U-'] == '':
             unit = 'L'
@@ -193,7 +193,7 @@ while True:
         if L/H1_input>=3.5 or (H1_input**2-H**2)/L**2<0.1:
         
             if res[0]<1e-3 and res[1]>1-1e-3:
-                if not N ==5000:
+                if not N ==50000:
                     '''
                     filename = f"Error: The aspect ratio is high!"
                     window['-OUTPUT10-'].update(filename,font = ("Serif", 20),text_color='Red')
@@ -208,7 +208,7 @@ while True:
                 window['-OUTPUT10-'].update(filename,font = ("Serif", 20),text_color='Red')
             
         else:
-            if not N ==5000:
+            if not N ==50000:
                 filename = f"Caution: Try higher resolution if free surface is disconnected!"
                 window['-OUTPUT10-'].update(filename,font = ("Serif", 15),text_color='Red')
                
