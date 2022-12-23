@@ -16,7 +16,7 @@
 
 
 ## git-lfs ##
-
+*.zip
 #Image
 *.jpg filter=lfs diff=lfs merge=lfs -text
 *.jpeg filter=lfs diff=lfs merge=lfs -text
