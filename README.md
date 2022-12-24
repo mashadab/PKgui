@@ -8,7 +8,7 @@ The University of Texas at Austin
 
 ### Overview
 
-This codes solves the Polubarina-Kochina equations for low aspect ratio dam problems where upper lake level is close to the length of the dam. The GUI standalone executables are compatible with Mac and Windows (available [here](https://github.com/mashadab/Polubarinova-Kochina-solutions/blob/main/Executables.zip)). The results have been validated with [1].
+This codes solves the Polubarina-Kochina equations for low aspect ratio dam problems where upper lake level is close to the length of the dam. The GUI standalone executables are compatible with Mac and Windows (available [here](https://github.com/mashadab/Polubarinova-Kochina-solutions/blob/main/Executables.zip)). The results have been validated with [2].
 
 ![cover](/cover/cover.png?raw=true)
 
