@@ -1,5 +1,5 @@
 # Polubarinova-Kochina-solutions
-## ([Standalone GUI executables for Windows and Mac](https://drive.google.com/drive/u/0/folders/184aby8uWy1ZTMGidqhQwq9rfznjocVY1))
+## ([Standalone GUI executables for Windows and Mac](https://github.com/mashadab/Polubarinova-Kochina-solutions/blob/main/Executables.zip))
 Oden Institute for Computational Engineering and Sciences / Jackson School of Geosciences / University of Texas Institute for Geophysics
 The University of Texas at Austin
 
@@ -18,13 +18,13 @@ L: Length of dam [L],   H: Lower lake height [L],   H1: Upper lake height [L],  
 Alpha: Pbk parameter [-],   Beta:  Pbk parameter [-],   z: Free surface height [L],   x: horizontal dimension [L],   Q: Total flow rate by width in third dimension [L^2/T], Q_H0/Q_H: Ratio of flow rate from seepage face vs from lake [-]
 
 ### Relevant file paths
-- [Standalone executable GUI](https://drive.google.com/drive/u/0/folders/184aby8uWy1ZTMGidqhQwq9rfznjocVY1)
+- [Standalone executable GUI](https://github.com/mashadab/Polubarinova-Kochina-solutions/blob/main/Executables.zip)
 - [Python with GUI](https://github.com/mashadab/Polubarinova-Kochina-solutions/blob/main/Pbk_GUI_latest.py)
 
 ## Quick Usage
 ### Executable GUI (Windows and Mac)
 
-1. Download the executables from [Google drive](https://drive.google.com/drive/u/0/folders/184aby8uWy1ZTMGidqhQwq9rfznjocVY1).
+1. Download the executables (https://github.com/mashadab/Polubarinova-Kochina-solutions/blob/main/Executables.zip).
 
 2. Run the exe file (takes a few seconds to boot).:
 
