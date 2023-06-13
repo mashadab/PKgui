@@ -1,16 +1,33 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Pbk GUI
+PK GUI Driver Code for Mac
+Author: Mohammad Afzal Shadab
+Email: mashadab@utexas.edu
+License: MIT
+
+_______________________________________________
+Main Variables
+
+#H: Lower lake height
+#H1: Upper lake height
+#H0: Seepage lake height
+#L: Length of the dam
+#N: Setting resolution for free surface height
+#U: length units
+#U2: time units
+#Q: total flow rate 
+#K: hydraulic cond.
+#FOLDER: output folder directory
+_______________________________________________
 """
 
 import PySimpleGUI as sg
 from Pbk_main_function_latest import *
 
 sg.theme('Dark Green 7')
-#sg.change_look_and_feel('DarkAmber') 
 
-#window layout of two columns
+#window layout of two columns using PySimpleGUI
 file_list_column = [  [sg.Txt('Polubarinova-Kochina Solution',font = ("Serif", 28,"bold"))],
            [sg.Txt('  ',font = ("Serif", 10))],
            [sg.Txt('Developed by:',font = ("Serif", 15,'bold')),sg.Txt('M.A. Shadab*, E. Hiatt & M.A. Hesse',font = ("Serif", 15))],
@@ -51,7 +68,7 @@ file_list_column = [  [sg.Txt('Polubarinova-Kochina Solution',font = ("Serif", 2
             ]
            ]
 
-#for now will only show the name of the chosen file
+#output variables and photo
 image_viewer_column = [
            [sg.Txt('Output details',font = ("Serif", 18,'bold','italic'))],
            [sg.Txt('  L :',font = ("Serif", 15)), sg.Txt(size=(20,1), key='-OUTPUT5-') ,
@@ -80,42 +97,43 @@ layout = [
 
 window = sg.Window('Polubarinova-Kochina Solution', layout)
 
+#Running the program
 while True:
     event, values = window.read()
 
     if event != sg.WIN_CLOSED:  
-        if values['-CheckH-'] == False:
+        if values['-CheckH-'] == False: #H: Lower lake height
             H = nan
         else: 
             H = float(values['-H-'])
-        if values['-CheckH1-'] == False:
+        if values['-CheckH1-'] == False:  #H1: Upper lake height
             H1 = nan
         else: 
-            H1 = float(values['-H1-'])
+            H1 = float(values['-H1-'])  
             H1_input = H1
-        if values['-CheckH0-'] == False:
+        if values['-CheckH0-'] == False:  #H0: Seepage lake height
             H0 = nan
         else: 
             H0 = float(values['-H0-'])
             H0_input = H0
-        if values['-CheckL-'] == False:
+        if values['-CheckL-'] == False:   #L: Length of the dam
             L = nan
         else: 
             L = float(values['-L-'])
 
-        if values['-CheckLowRes-'] == True:
+        if values['-CheckLowRes-'] == True: #N: Setting resolution for free surface ht
             N = 100
         elif values['-CheckHighRes-'] == True: 
             N = 2000
         else:
             N = 50000
             
-        if values['-U-'] == '':
+        if values['-U-'] == '': #U: length units
             unit = 'L'
         else: 
             unit = str(values['-U-'])
 
-        if values['-U2-'] == '':
+        if values['-U2-'] == '': #U2: time units
             Tunit = 'T'
         else: 
             Tunit = str(values['-U2-'])        
@@ -123,14 +141,14 @@ while True:
         if values['-CheckQ-'] == False:
             Q = nan
         else: 
-            Q = float(values['-Q-'])
+            Q = float(values['-Q-'])  #Q: total flow rate  
 
-        if values['-CheckK-'] == False:
+        if values['-CheckK-'] == False:  #K: hydraulic cond.
             K = nan
         else:
             K = float(values['-K-'])
         
-        if values['-FOLDER-'] == '':
+        if values['-FOLDER-'] == '':  #FOLDER: output folder directory
             output_folder = '/tmp'
         else: 
             output_folder = str(values['-FOLDER-'])
@@ -138,11 +156,13 @@ while True:
         window['-OUTPUT10-'].update('',font = ("Serif", 15)),sg.Txt(size=(50,1))
         window["-IMAGE-"].update('',size=(550,490))
 
+        #indicator of nan
         if (isnan(H) and ~isnan(H1) and isnan(H0) and ~isnan(L) and ~isnan(Q/K)) or (~isnan(H) and isnan(H1) and ~isnan(H0) and isnan(L) and ~isnan(Q/K)):
             buzzer = 1
         else: 
             buzzer = 0
             
+        #solving the equations nonlinearly   
         H0, H, L, res, xz_array,Q,K, H1,QH0byQH,QbyK, output_folder_full = PbK_solution_full(H0,H,L,H1,N,output_folder,Q,K,unit,Tunit)
         calc = f'{H0:.7f} [{unit}]'
         calc1 = f'{res[0]:.7f}'
@@ -157,6 +177,8 @@ while True:
         calc10= f'{QH0byQH:.7f}'
         
         print('Worked')
+        
+        #Showing output on a case by case basis
         if isnan(H0) and isnan(H1) and isnan(res):
             print('Did not work')
             calc = 'Invalid H0'
@@ -190,30 +212,26 @@ while True:
             
             print('L/H1 ratio is',L/H1_input)
 
-        if L/H1_input>=3.5 or (H1_input**2-H**2)/L**2<0.1:
+        if L/H1_input>=3.5 or (H1_input**2-H**2)/L**2<0.1: #Checking if the PK solution is valid
         
             if res[0]<1e-3 and res[1]>1-1e-3:
                 if not N ==50000:
-                    '''
-                    filename = f"Error: The aspect ratio is high!"
-                    window['-OUTPUT10-'].update(filename,font = ("Serif", 20),text_color='Red')
-                    '''  
                     filename = f"Caution: Limiting case!"  
                     window['-OUTPUT10-'].update(filename,font = ("Serif", 15),text_color='Red')
                 filename = f"{output_folder_full}/free-surface-profile.png"
                 window["-IMAGE-"].update(filename=filename)
 
-            else:
+            else: #Checking if the PK solution is valid: Throw an error
                 filename = f"Error: The aspect ratio is high!"
                 window['-OUTPUT10-'].update(filename,font = ("Serif", 20),text_color='Red')
             
         else:
-            if not N ==50000:
+            if not N ==50000: #Checking if higher resolution is needed 
                 filename = f"Caution: Try higher resolution if free surface is disconnected!"
                 window['-OUTPUT10-'].update(filename,font = ("Serif", 15),text_color='Red')
                
 
-            if buzzer==1:
+            if buzzer==1:  #Checking if accuracy is low
                 print('Hello there')
                 filename = f"Caution: Accuracy may be low! Pick other variables."
                 window['-OUTPUT10-'].update(filename,font = ("Serif", 15),text_color='Red')                
