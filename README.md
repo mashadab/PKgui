@@ -1,4 +1,4 @@
-# Polubarinova-Kochina-solutions
+# Pkgui: Polubarinova-Kochina-solutions
 ## ([Standalone GUI executables for Windows and Mac](https://github.com/mashadab/Polubarinova-Kochina-solutions/blob/main/Executables.zip))
 Oden Institute for Computational Engineering and Sciences / Jackson School of Geosciences / University of Texas Institute for Geophysics
 The University of Texas at Austin
